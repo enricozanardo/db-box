@@ -1,4 +1,25 @@
 package: github.com/onezerobinary/web-box
 import:
-- package: github.com/gorilla/mux
-  version: ^1.6.0
+- package: github.com/claudiu/gocron
+- package: github.com/golang/protobuf
+- package: golang.org/x/net
+- package: google.golang.org/grpc
+- package: github.com/hyperledger/fabric
+- package: github.com/spf13/viper
+- package: github.com/op/go-logging
+- package: github.com/fsnotify/fsnotify
+- package: github.com/hashicorp/hcl
+- package: github.com/magiconair/properties
+- package: github.com/mitchellh/mapstructure
+- package: github.com/pelletier/go-toml
+- package: github.com/spf13/afero
+- package: github.com/spf13/cast
+- package: github.com/spf13/jwalterweatherman
+- package: github.com/spf13/pflag
+- package: gopkg.in/yaml.v2
+- package: google.golang.org/genproto
+- package: golang.org/x/sys
+- package: golang.org/x/text
+- package: gopkg.in/yaml.v2
+- package: github.com/pkg/errors
+- package: github.com/goinggo/tracelog

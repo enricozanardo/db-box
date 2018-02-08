@@ -1,0 +1,6 @@
+database:
+  username: "enrico"
+  password: "123456"
+  address: "localhost:5984"
+#  address: "127.0.0.1:5984"
+  name: "onezero-accounts"

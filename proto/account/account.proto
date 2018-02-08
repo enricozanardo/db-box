@@ -1,0 +1,101 @@
+// protoc -I proto/ proto/account/account.proto --go_out=plugins=grpc:proto
+
+syntax = "proto3";
+package account;
+
+/*
+* Represent the Account service
+*/
+service AccountService {
+
+    // Create a new Account
+    rpc CreateAccount (Account) returns (Response) {}
+
+//    // Get Account given the Credentials
+//    rpc GetAccountByCredentials (Credentials) returns (Account) {}
+//
+//    // Get an Account given the Token
+//    rpc GetAccountByToken (Token) returns (Account) {}
+//
+//    // Update an Account given the updated Account
+//    rpc UpdateAccount (Account) returns (Response) {}
+//
+//    // Delete an Account given the Token
+//    rpc DeleteAccount (Token) returns (Response) {}
+//
+//    // Check if an email address is already used
+//    rpc CheckEmail (Email) returns (Response) {}
+
+//    // Get the Status of an account given the Token
+//    rpc GetAccountStatus (Token) returns (Status) {}
+//
+//    // Set the Status of an account given the Updated Status
+//    rpc SetAccountStatus (UpdateStatus) returns (Response) {}
+//
+//    // Get all the accounts based on a specific Status
+//    rpc GetAccountsByStatus (Status) returns (Accounts) {}
+//
+//    //Get the account collection
+//    rpc GetAccounts (Empty) returns (Accounts) {}
+}
+
+message Empty {
+}
+
+message Account {
+    string uuid = 1;
+    string username = 2;
+    string password = 3;
+    Token token = 4;
+    enum Status {
+        NOTSET = 0;
+        ENABLED = 1;
+        DISABLED = 2;
+        SUSPENDED = 3;
+        REVOKED = 4;
+    }
+    Status status = 5;
+    string type = 6;
+    string created = 7;
+    string expiration = 8;
+
+}
+
+message Credentials {
+    string username = 1;
+    string password = 2;
+    Token token = 3;
+}
+
+message Token {
+    string token = 1;
+}
+
+message Response {
+    int32 code = 1;
+    Token token = 2;
+}
+
+message Status {
+    enum Status {
+        NOTSET = 0;
+        ENABLED = 1;
+        DISABLED = 2;
+        SUSPENDED = 3;
+        REVOKED = 4;
+    }
+    Status status = 1;
+}
+
+message UpdateStatus {
+    Token token = 1;
+    Status status = 2;
+}
+
+message Accounts {
+    repeated Account accounts = 1;
+}
+
+message Email {
+    string email = 1;
+}

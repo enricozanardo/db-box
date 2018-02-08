@@ -1,20 +1,34 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-	"github.com/gorilla/mux"
+	"net"
+	"google.golang.org/grpc"
+	pb_account "github.com/onezerobinary/db-box/proto/account"
+	"github.com/onezerobinary/db-box/mygrpc"
+	"github.com/goinggo/tracelog"
+	"os"
+)
+
+const (
+	GRPC_PORT = ":1982"
 )
 
 func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/", Hello)
-	http.Handle("/", r)
-	fmt.Println("Starting up on 8800")
-	log.Fatal(http.ListenAndServe(":8800", nil))
-}
 
-func Hello(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(w, "Hello Enrico!")
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	listen, err := net.Listen("tcp", GRPC_PORT)
+	if err != nil {
+		tracelog.Errorf(err, "app", "main", "Failed to start the service")
+		os.Exit(1)
+	}
+
+	grpcServer := grpc.NewServer()
+	// Add to the grpcServer the Service
+	pb_account.RegisterAccountServiceServer(grpcServer, &mygrpc.AccountServiceServer{})
+
+	tracelog.Trace("app", "main", "Grpc Server Listening on port 1982")
+
+	grpcServer.Serve(listen)
 }

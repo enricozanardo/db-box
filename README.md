@@ -1,4 +1,4 @@
-# web-box
+# db-box
 A web service box that will be contained into docker
 
 ## Steps:

@@ -4,7 +4,7 @@
 *.so
 *.dylib
 *.idea*
-.env.prod
+*.env
 
 # Test binary, build with `go test -c`
 *.test

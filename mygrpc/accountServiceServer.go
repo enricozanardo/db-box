@@ -46,7 +46,6 @@ func (s *AccountServiceServer) CreateAccount (ctx context.Context, account *pb_a
 	}
 
 	response = pb_account.Response{ 200, &token}
-
 	// Send back the response
 	return &response, nil
 }

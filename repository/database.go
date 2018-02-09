@@ -44,7 +44,8 @@ func GetSettings() (dbSettings DBSettings){
 
 		//development environment
 		viper.SetConfigName("config")
-		viper.AddConfigPath("../.")
+		//viper.AddConfigPath("../.")
+		viper.AddConfigPath("./")
 
 		if err := viper.ReadInConfig(); err != nil {
 			fetchError("Error reading config file %s", err)

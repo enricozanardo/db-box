@@ -29,10 +29,15 @@ func TestAddDoc(t *testing.T) {
 	//fakeToken := pb_account.Token{"fff"}
 	fakeStatus := pb_account.Account_Status(pb_account.Account_DISABLED)
 
+	username := "john"
+	password := "doe"
+
+	faketoken := GenerateToken(username, password)
+
 	fakeAccount := pb_account.Account{
-		"1234",
-		"foo",
-		"bar",
+		faketoken,
+		username,
+		password,
 		nil,
 		fakeStatus,
 		"Account",
@@ -89,4 +94,96 @@ func TestGetAccountByCredentials(t *testing.T) {
 	if account == nil {
 		t.Errorf("Error, no account found")
 	}
+}
+
+func TestGetAccountByToken(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	fakeCredentials := pb_account.Credentials{}
+
+	fakeCredentials.Username = "foo"
+	fakeCredentials.Password = "bar"
+
+	token := pb_account.Token{}
+
+	to := GenerateToken(fakeCredentials.Username, fakeCredentials.Password)
+
+	token.Token = to
+
+	account, err := GetAccountByToken(token)
+
+	if err != nil {
+		t.Error("Error in getting the informations", err)
+	}
+
+	if account == nil {
+		t.Errorf("Error, no account found")
+	}
+}
+
+func TestRemoveDoc(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	fakeCredentials := pb_account.Credentials{}
+
+	fakeCredentials.Username = "john"
+	fakeCredentials.Password = "doe"
+
+	token := pb_account.Token{}
+
+	to := GenerateToken(fakeCredentials.Username, fakeCredentials.Password)
+
+	token.Token = to
+
+	err := RemoveDoc(token)
+
+	if err != nil {
+		t.Errorf("Error to delete the account")
+	}
+}
+
+func TestUpdateDoc(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	// Create and add an account to the DB
+	fakeStatus := pb_account.Account_Status(pb_account.Account_DISABLED)
+
+	username := "Mary"
+	password := "Rossi"
+
+	faketoken := GenerateToken(username, password)
+
+	fakeAccount := pb_account.Account{
+		faketoken,
+		username,
+		password,
+		nil,
+		fakeStatus,
+		"Account",
+		"2018-01-11",
+		"2028-01-10",
+	}
+
+	token, err :=  AddDoc(fakeAccount)
+
+	tk := pb_account.Token{Token:token}
+
+	account, err := GetAccountByToken(tk)
+
+	account.Token.Token = token
+	//change the something to the account
+	account.Status = pb_account.Account_Status(pb_account.Account_SUSPENDED)
+
+	err = UpdateDoc(*account)
+
+	if err != nil {
+		t.Errorf("Error to update the account")
+	}
+
 }

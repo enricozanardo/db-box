@@ -11,32 +11,32 @@ service AccountService {
     // Create a new Account
     rpc CreateAccount (Account) returns (Response) {}
 
-//    // Get Account given the Credentials
-//    rpc GetAccountByCredentials (Credentials) returns (Account) {}
-//
-//    // Get an Account given the Token
-//    rpc GetAccountByToken (Token) returns (Account) {}
-//
-//    // Update an Account given the updated Account
-//    rpc UpdateAccount (Account) returns (Response) {}
-//
-//    // Delete an Account given the Token
-//    rpc DeleteAccount (Token) returns (Response) {}
-//
-//    // Check if an email address is already used
-//    rpc CheckEmail (Email) returns (Response) {}
+    // Get Account given the Credentials
+    rpc GetAccountByCredentials (Credentials) returns (Account) {}
 
-//    // Get the Status of an account given the Token
-//    rpc GetAccountStatus (Token) returns (Status) {}
-//
-//    // Set the Status of an account given the Updated Status
-//    rpc SetAccountStatus (UpdateStatus) returns (Response) {}
-//
-//    // Get all the accounts based on a specific Status
-//    rpc GetAccountsByStatus (Status) returns (Accounts) {}
-//
-//    //Get the account collection
-//    rpc GetAccounts (Empty) returns (Accounts) {}
+    // Get an Account given the Token
+    rpc GetAccountByToken (Token) returns (Account) {}
+
+    // Update an Account given the updated Account
+    rpc UpdateAccount (Account) returns (Response) {}
+
+    // Delete an Account given the Token
+    rpc DeleteAccount (Token) returns (Response) {}
+
+    // Check if an email address is already used
+    rpc CheckEmail (Email) returns (Response) {}
+
+    // Get the Status of an account given the Token
+    rpc GetAccountStatus (Token) returns (Status) {}
+
+    // Set the Status of an account given the Updated Status
+    rpc SetAccountStatus (UpdateStatus) returns (Response) {}
+
+    // Get all the accounts based on a specific Status
+    rpc GetAccountsByStatus (Status) returns (Accounts) {}
+
+    //Get the account collection
+    rpc GetAccounts (Empty) returns (Accounts) {}
 }
 
 message Empty {
@@ -89,7 +89,7 @@ message Status {
 
 message UpdateStatus {
     Token token = 1;
-    Status status = 2;
+    Account.Status status = 2;
 }
 
 message Accounts {

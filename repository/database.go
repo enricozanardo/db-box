@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"io"
 	"github.com/goinggo/tracelog"
+	"errors"
 )
 
 type DBSettings struct {
@@ -44,8 +45,11 @@ func GetSettings() (dbSettings DBSettings){
 
 		//development environment
 		viper.SetConfigName("config")
-		//viper.AddConfigPath("../.")
-		viper.AddConfigPath("./")
+		// Internal tests
+		viper.AddConfigPath("../.")
+
+		// Remote tests
+		//viper.AddConfigPath("./")
 
 		if err := viper.ReadInConfig(); err != nil {
 			fetchError("Error reading config file %s", err)
@@ -228,28 +232,230 @@ func GetAccountByCredentials(credentials pb_account.Credentials) (account *pb_ac
 	return nil, nil
 }
 
-func GetAccountByToken(token pb_account.Token) (account pb_account.Account, err error) {
-	return
+func GetAccountByToken(token pb_account.Token) (account *pb_account.Account, dberr error) {
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountByToken", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringToken := token.Token
+
+	queryString := "{\"selector\":{\"token.token\":{\"$eq\":\""+ stringToken +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountByToken", "Error to search doc to the DB")
+	}
+
+	for k, v := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "GetAccountByToken", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetAccountByToken", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","GetAccountByToken","Account found")
+		return account, nil
+	}
+	//account not found
+	tracelog.Warning("database", "GetAccountByToken", "Account not found, return nil")
+	dberr = err
+	return nil, dberr
 }
 
 func RemoveDoc(token pb_account.Token) (err error){
+
+	db, err := ConnectToDB()
+
+	_, revision, _ :=  db.ReadDoc(token.Token)
+
+	err = db.DeleteDoc(token.Token, revision)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "RemoveDoc", "Error to delete doc from the DB")
+		os.Exit(1)
+	}
+
 	return
 }
 
 func UpdateDoc(account pb_account.Account) (err error){
+
+	db, err := ConnectToDB()
+	// Get revision
+	_, revision, _ :=  db.ReadDoc(account.Uuid)
+
+	// Marshal the document in Json
+	jsonDoc, _ := json.Marshal(account)
+
+	// Store the document into the DB
+	text, err := db.SaveDoc(account.Uuid, revision, & couchdb.CouchDoc{JSONValue: jsonDoc, Attachments: nil})
+
+	tracelog.Trace("database", "UpdateDoc", text)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "RemoveDoc", "Error to update account to the DB")
+		os.Exit(1)
+		return
+	}
+
 	return
 }
 
-func CheckEmail(email pb_account.Email) (token pb_account.Token, err error){
-	return
+func CheckEmail(email pb_account.Email) (token *pb_account.Token, dberr error){
+
+	account := pb_account.Account{}
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "CheckEmail", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringEmail := email.Email
+
+	queryString := "{\"selector\":{\"username\":{\"$eq\":\""+ stringEmail +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "CheckEmail", "Error to search email to the DB")
+	}
+
+	for k, v := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "CheckEmail", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "CheckEmail", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","CheckEmail","Email found")
+		return account.Token, nil
+	}
+	//account not found
+	tracelog.Warning("database", "CheckEmail", "Email not found, return nil")
+	dberr = err
+	return nil, dberr
 }
 
-func GetAccountStatus(token pb_account.Token) (accountStatus pb_account.Status, err error){
-	return
+func GetAccountStatus(token pb_account.Token) (accountStatus *pb_account.Account_Status, dberr error){
+	account := pb_account.Account{}
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountStatus", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringToken := token.Token
+
+	queryString := "{\"selector\":{\"token.token\":{\"$eq\":\""+ stringToken +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountStatus", "Error to search account status into the DB")
+	}
+
+	for k, v := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "GetAccountStatus", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetAccountStatus", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","GetAccountStatus","Email found")
+		return &account.Status, nil
+	}
+	//account not found
+	tracelog.Warning("database", "GetAccountStatus", "Email not found, return nil")
+	dberr = err
+	return nil, dberr
 }
 
-func SetAccountStatus(updateStatus pb_account.UpdateStatus)(err error){
-	return
+func SetAccountStatus(updateStatus pb_account.UpdateStatus)(dberr error){
+	account := pb_account.Account{}
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "SetAccountStatus", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringToken := updateStatus.Token.Token
+
+	queryString := "{\"selector\":{\"token.token\":{\"$eq\":\""+ stringToken +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "SetAccountStatus", "Error to search account status into the DB")
+	}
+
+	for k, v := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "SetAccountStatus", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "SetAccountStatus", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","SetAccountStatus","Account found")
+
+		account.Status = updateStatus.Status
+
+		// Update the the document
+		err = UpdateDoc(account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "SetAccountStatus", "Error to update Status into the DB")
+			os.Exit(1)
+		}
+
+		return  nil
+	}
+
+	tracelog.Errorf(err, "database", "SetAccountStatus", "Error to update Status into the DB")
+	dberr = errors.New("Error to update Status into the DB")
+	return dberr
 }
 
 func GetAccountsByStatus(status pb_account.Status) (accounts pb_account.Accounts, err error){

@@ -458,11 +458,83 @@ func SetAccountStatus(updateStatus pb_account.UpdateStatus)(dberr error){
 	return dberr
 }
 
-func GetAccountsByStatus(status pb_account.Status) (accounts pb_account.Accounts, err error){
-	return
+func GetAccountsByStatus(status pb_account.Status) (accounts *pb_account.Accounts, err error){
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountsByStatus", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringStatus := status.Status
+
+	queryString := "{\"selector\":{\"status\":{\"$eq\":" + string(stringStatus) + "}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccountsByStatus", "Error to search account status into the DB")
+	}
+
+	for _, v := range *queryResults {
+
+		account := pb_account.Account{}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetAccountsByStatus", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","GetAccountsByStatus","account with this status found")
+
+		accounts.Accounts = append(accounts.Accounts, &account)
+	}
+
+	tracelog.Warning("database", "GetAccountsByStatus", "Done, return all the account based on a given status")
+
+	return accounts, nil
 }
 
-func GetAccounts() (accounts pb_account.Accounts, err error){
-	return
+func GetAccounts() (accounts *pb_account.Accounts, err error){
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccounts", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	queryString := "{\"selector\":{\"type\":{\"$eq\":" + "Account" + "}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetAccounts", "Error to search accounts into the DB")
+	}
+
+	for _, v := range *queryResults {
+
+		account := pb_account.Account{}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetAccounts", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","GetAccounts","account with this status found")
+
+		accounts.Accounts = append(accounts.Accounts, &account)
+	}
+
+	tracelog.Warning("database", "GetAccounts", "Done, return all the Accounts")
+
+	return accounts, nil
 }
 

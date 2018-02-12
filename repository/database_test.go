@@ -185,5 +185,24 @@ func TestUpdateDoc(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error to update the account")
 	}
-
 }
+
+func TestCheckEmail(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	email := pb_account.Email{ "Mary"}
+
+	token, err := CheckEmail(email)
+
+	if err != nil {
+		t.Errorf("Error to get the email back")
+	}
+
+	if token != nil {
+		response := "Token: " + token.Token
+		tracelog.Trace("", "", response)
+	}
+}
+

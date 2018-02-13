@@ -359,7 +359,7 @@ func CheckEmail(email pb_account.Email) (token *pb_account.Token, dberr error){
 	return nil, dberr
 }
 
-func GetAccountStatus(token pb_account.Token) (accountStatus *pb_account.Account_Status, dberr error){
+func GetAccountStatus(token pb_account.Token) (accountStatus *pb_account.Status, dberr error){
 	account := pb_account.Account{}
 
 	db, err := ConnectToDB()
@@ -395,7 +395,8 @@ func GetAccountStatus(token pb_account.Token) (accountStatus *pb_account.Account
 		}
 
 		tracelog.Trace("database","GetAccountStatus","Email found")
-		return &account.Status, nil
+
+		return account.Status, nil
 	}
 	//account not found
 	tracelog.Warning("database", "GetAccountStatus", "Email not found, return nil")
@@ -466,15 +467,34 @@ func GetAccountsByStatus(status pb_account.Status) (accounts *pb_account.Account
 		os.Exit(1)
 	}
 
-	stringStatus := status.Status
+	s := status.Status.String()
 
-	queryString := "{\"selector\":{\"status\":{\"$eq\":" + string(stringStatus) + "}}}"
+	value := 0
 
-	queryResults, err := db.QueryDocuments(queryString)
+	switch  {
+		case s == "NOTSET":
+			value = 0
+		case s == "ENABLED":
+			value = 1
+		case s == "DISABLED":
+			value = 2
+		case s == "SUSPENDED":
+			value = 3
+		case s == "REVOKED":
+			value = 4
+		default:
+			value = 0
+	}
+
+	output := fmt.Sprintf("{\"selector\":{\"status.status\":{\"$eq\": %v }}}", value)
+
+	queryResults, err := db.QueryDocuments(output)
 
 	if err != nil {
 		tracelog.Errorf(err, "database", "GetAccountsByStatus", "Error to search account status into the DB")
 	}
+
+	var accountList pb_account.Accounts
 
 	for _, v := range *queryResults {
 
@@ -491,12 +511,12 @@ func GetAccountsByStatus(status pb_account.Status) (accounts *pb_account.Account
 
 		tracelog.Trace("database","GetAccountsByStatus","account with this status found")
 
-		accounts.Accounts = append(accounts.Accounts, &account)
+		accountList.Accounts = append(accountList.Accounts, &account)
 	}
 
-	tracelog.Warning("database", "GetAccountsByStatus", "Done, return all the account based on a given status")
+	tracelog.Trace("database", "GetAccountsByStatus", "Done, return (if any) all the accounts based on a given status")
 
-	return accounts, nil
+	return &accountList, nil
 }
 
 func GetAccounts() (accounts *pb_account.Accounts, err error){
@@ -507,13 +527,17 @@ func GetAccounts() (accounts *pb_account.Accounts, err error){
 		os.Exit(1)
 	}
 
-	queryString := "{\"selector\":{\"type\":{\"$eq\":" + "Account" + "}}}"
+	value := "Account"
 
-	queryResults, err := db.QueryDocuments(queryString)
+	output := fmt.Sprintf("{\"selector\":{\"type\":{\"$eq\":\"%v\"}}}", value)
+
+	queryResults, err := db.QueryDocuments(output)
 
 	if err != nil {
 		tracelog.Errorf(err, "database", "GetAccounts", "Error to search accounts into the DB")
 	}
+
+	var accountList pb_account.Accounts
 
 	for _, v := range *queryResults {
 
@@ -530,11 +554,11 @@ func GetAccounts() (accounts *pb_account.Accounts, err error){
 
 		tracelog.Trace("database","GetAccounts","account with this status found")
 
-		accounts.Accounts = append(accounts.Accounts, &account)
+		accountList.Accounts = append(accountList.Accounts, &account)
 	}
 
-	tracelog.Warning("database", "GetAccounts", "Done, return all the Accounts")
+	tracelog.Trace("database", "GetAccounts", "Done, return all the Accounts")
 
-	return accounts, nil
+	return &accountList, nil
 }
 

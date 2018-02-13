@@ -47,13 +47,6 @@ message Account {
     string username = 2;
     string password = 3;
     Token token = 4;
-    enum Status {
-        NOTSET = 0;
-        ENABLED = 1;
-        DISABLED = 2;
-        SUSPENDED = 3;
-        REVOKED = 4;
-    }
     Status status = 5;
     string type = 6;
     string created = 7;
@@ -89,7 +82,7 @@ message Status {
 
 message UpdateStatus {
     Token token = 1;
-    Account.Status status = 2;
+    Status status = 2;
 }
 
 message Accounts {

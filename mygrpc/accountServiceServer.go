@@ -69,11 +69,11 @@ func (s *AccountServiceServer) GetAccountByToken (ctx context.Context, token *pb
 	account, err := repository.GetAccountByToken(*token)
 
 	if err != nil {
-		account = pb_account.Account{}
-		return &account, err
+		account = &pb_account.Account{}
+		return account, err
 	}
 
-	return &account, nil
+	return account, nil
 }
 
 // Delete an Account given the Token
@@ -122,29 +122,28 @@ func (s *AccountServiceServer) CheckEmail (ctx context.Context, email *pb_accoun
 
 	if err != nil {
 		// No email found
-		response = pb_account.Response{ 400, &token}
+		response = pb_account.Response{ 400, token}
 		return &response, err
 	}
 
 	// Email found
-	response = pb_account.Response{ 200, &token}
+	response = pb_account.Response{ 200, token}
 
 	return &response, nil
 }
 
 // Get the Status of an account given the Token
-func (s *AccountServiceServer) GetAccountStatus (ctx context.Context, token *pb_account.Token)  (*pb_account.Account_Status, error) {
+func (s *AccountServiceServer) GetAccountStatus (ctx context.Context, token *pb_account.Token)  (*pb_account.Status, error) {
 
 	// Get the status of an account
-	accountStatus, err := repository.GetAccountStatus(*token)
+	status, err := repository.GetAccountStatus(*token)
 
 	if err != nil {
 		// No email found
-		accountStatus = pb_account.Account_Status(pb_account.Status_NOTSET)
-		return &accountStatus, err
+		return nil, err
 	}
 
-	return &accountStatus, nil
+	return status, nil
 }
 
 // Set the Status of an account given the Updated Status
@@ -174,22 +173,22 @@ func (s *AccountServiceServer) GetAccountsByStatus (ctx context.Context, status 
 
 	if err != nil {
 		//accounts = pb_account.Accounts{}
-		return &accounts, err
+		return accounts, err
 	}
 
-	return &accounts, nil
+	return accounts, nil
 }
 
 //Get the account collection
-func (s *AccountServiceServer) GetAccounts (ctx context.Context) (*pb_account.Accounts, error) {
+func (s *AccountServiceServer) GetAccounts (ctx context.Context, empty *pb_account.Empty) (*pb_account.Accounts, error) {
 
 	accounts, err := repository.GetAccounts()
 
 	if err != nil {
-		accounts = pb_account.Accounts{}
-		return &accounts, err
+
+		return nil, err
 	}
 
-	return &accounts, nil
+	return accounts, nil
 }
 

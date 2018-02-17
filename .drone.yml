@@ -10,7 +10,7 @@ build:
 
   publish:
     docker:
-      username: onezerobinary
-      password: Ch120772Za
+      username: ${DOCKER_USERNAME}
+      password: ${DOCKER_PASSWORD}
       email: ezanardo@onezerobinary.com
       repo: onezerobinary/db-box

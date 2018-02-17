@@ -1,5 +1,5 @@
 build:
-  image: onezerobinary/dev-box
+  image: onezerobinary/db-box
 
   script:
     name: go get

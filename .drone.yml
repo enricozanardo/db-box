@@ -1,14 +1,9 @@
+---
 build:
-  image: onezerobinary/db-box
-
-  script:
-    name: go get
-    code: |
-      go version
-      go get -u github.com/Masterminds/glide
-      glide install
-
-  script:
-    name: go test
-    code: |
-      go test -v ./utils
+  image: iron/go:dev
+  commands:
+    - go get
+    - go get -u github.com/Masterminds/glide
+    - glide install
+    - go build
+    - go test -v ./utils

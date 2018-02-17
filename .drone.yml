@@ -7,3 +7,10 @@ build:
 #    - glide install
     - go build
     - go test -v ./utils
+
+  publish:
+    docker:
+      username: onezerobinary
+      password: Ch120772Za
+      email: ezanardo@onezerobinary.com
+      repo: onezerobinary/db-box

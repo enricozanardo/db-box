@@ -25,7 +25,7 @@ publish:
 
 deploy:
   rancher:
-    url: http://172.104.145.70:1982
+    url: http://172.104.145.70:8080
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
     service: onezerobinary/db-box

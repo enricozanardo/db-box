@@ -25,10 +25,10 @@ publish:
 
 deploy:
   rancher:
-    url: http://172.104.145.70:8080
+    url: http://172.104.152.175:8080/v1
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
-    service: onezerobinary/db-box
+    service: academicdb/db-box
     docker_image: onezerobinary/db-box:latest
     when:
       branch: master

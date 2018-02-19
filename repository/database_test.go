@@ -59,12 +59,29 @@ func TestIsPresent(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
-	uuid := "2e9dbe901ff0172692e2e38e39f8daf5ae2f7c71"
 
-	p := IsPresent(uuid)
+	fakeCredentials := pb_account.Credentials{}
+
+	fakeCredentials.Username = "Pino"
+	fakeCredentials.Password = "Mancuso"
+
+	token := pb_account.Token{}
+
+	to := GenerateToken(fakeCredentials.Username, fakeCredentials.Password)
+
+	token.Token = to
+	fakeCredentials.Token = &token
+
+	account, err := GetAccountByCredentials(fakeCredentials)
+
+	if err != nil {
+		t.Error("Error in getting the informations", err)
+	}
+
+	p := IsPresent(account.Uuid)
 
 	if !p {
-		t.Error("Element not present: ", uuid)
+		t.Error("Element not present: ", account.Uuid)
 	}
 }
 

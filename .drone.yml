@@ -7,6 +7,7 @@ build:
 #    - glide install
     - go build
     - go test -v ./utils
+    - go test -v ./repository
 
 cache:
   mount:

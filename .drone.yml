@@ -8,9 +8,30 @@ build:
     - go build
     - go test -v ./utils
 
-  publish:
-    docker:
-      username: ${DOCKER_USERNAME}
-      password: ${DOCKER_PASSWORD}
-      email: ezanardo@onezerobinary.com
-      repo: onezerobinary/db-box
+cache:
+  mount:
+    - .git
+
+publish:
+  docker:
+    storage_driver: overlay
+    username: onezerobinary
+    password: $$DOCKER_HUB_PASSWORD
+    email: ezanardo@onezerobinary.com
+    repo: onezerobinary/db-box
+    tag: latest
+    when:
+      branch: master
+
+deploy:
+  rancher:
+    url: http://172.104.145.70:1982
+    access_key: $$RANCHER_ACCESS_KEY
+    secret_key: $$RANCHER_SECRET_KEY
+    service: onezerobinary/db-box
+    docker_image: onezerobinary/db-box:latest
+    when:
+      branch: master
+
+
+

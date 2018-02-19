@@ -32,6 +32,3 @@ deploy:
     docker_image: onezerobinary/db-box:latest
     when:
       branch: master
-
-
-

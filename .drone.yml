@@ -37,7 +37,7 @@ publish:
 
 deploy:
   rancher:
-    url: http://172.104.152.175:8080/v1/services/1s31/account
+    url: http://172.104.152.175:8080/v1
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
     service: academicdb/db-box
@@ -45,15 +45,15 @@ deploy:
     when:
       branch: master
 
-pipeline:
-  notify:
-      image: drillster/drone-email
-      host: smtp.webfaction.com
-      skip_verify: true
-      username: 10b_cicd
-      password: $$CICD_EMAIL_PASSWORD
-      from: cicd@onezerobinary.com
-      attachment: build-result.xml
-      recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@onezerobinary.com ]
-      when:
-        status: [ changed, failure ]
+#pipeline:
+#  notify:
+#      image: drillster/drone-email
+#      host: smtp.webfaction.com
+#      skip_verify: true
+#      username: 10b_cicd
+#      password: $$CICD_EMAIL_PASSWORD
+#      from: cicd@onezerobinary.com
+#      attachment: build-result.xml
+#      recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@onezerobinary.com ]
+#      when:
+#        status: [ changed, failure ]

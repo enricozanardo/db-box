@@ -44,3 +44,15 @@ deploy:
     docker_image: onezerobinary/db-box:latest
     when:
       branch: master
+
+notify:
+    image: drillster/drone-email
+    host: smtp.webfaction.com
+    skip_verify: true
+    username: 10b_cicd
+    password: $$CICD_EMAIL_PASSWORD
+    from: cicd@onezerobinary.com
+    attachment: build-result.xml
+    recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@onezerobinary.com ]
+    when:
+      status: [ changed, failure ]

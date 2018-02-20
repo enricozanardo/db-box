@@ -15,11 +15,6 @@ build:
     COUCHDB_NAME: onezero-accounts
     COUCHDB_PORT_5984_TCP_ADDR: localhost
     COUCHDB_PORT_5984_TCP_PORT: 5984
-    DBNAME: onezero-accounts
-
-script:
-  name: env
-  code: env
 
 compose:
   database:

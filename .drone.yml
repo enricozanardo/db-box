@@ -13,7 +13,7 @@ build:
     COUCHDB_USER: enrico
     COUCHDB_PASSWORD: 123456
     COUCHDB_NAME: onezero-accounts
-    COUCHDB_PORT_5984_TCP_ADDR: database
+    COUCHDB_PORT_5984_TCP_ADDR: couchdb
     COUCHDB_PORT_5984_TCP_PORT: 5984
 
 compose:

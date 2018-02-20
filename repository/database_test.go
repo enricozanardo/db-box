@@ -92,8 +92,8 @@ func TestGetAccountByCredentials(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "johnny"
-	fakeCredentials.Password = "doe"
+	fakeCredentials.Username = "Pino"
+	fakeCredentials.Password = "Mancuso"
 
 	token := pb_account.Token{}
 
@@ -120,8 +120,8 @@ func TestGetAccountByToken(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "johnny"
-	fakeCredentials.Password = "doe"
+	fakeCredentials.Username = "Pino"
+	fakeCredentials.Password = "Mancuso"
 
 	token := pb_account.Token{}
 

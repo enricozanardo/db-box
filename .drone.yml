@@ -17,6 +17,10 @@ build:
     COUCHDB_PORT_5984_TCP_PORT: 5984
     DBNAME: onezero-accounts
 
+  script:
+    name: env
+    code: env
+
 compose:
   database:
     image: couchdb:latest

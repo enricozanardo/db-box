@@ -11,4 +11,8 @@ func CheckAccountStatus() {
 // If an account is in status suspened then set its status disabled
 func dailyCheckNewAccounts(){
 	println("Do something")
+
+	//Get Account with status
+
+
 }

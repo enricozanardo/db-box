@@ -228,7 +228,7 @@ func TestSetAccountStatus(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
-	token := pb_account.Token{Token:"49926336a43fc66a762e64fa5b1bf1a86fa20848"}
+	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
 	account, err := GetAccountByToken(token)
 
 	if err != nil {
@@ -254,7 +254,7 @@ func TestGetAccountStatus(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
-	token := pb_account.Token{Token:"49926336a43fc66a762e64fa5b1bf1a86fa20848"}
+	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
 	account, err := GetAccountByToken(token)
 
 	if err != nil {

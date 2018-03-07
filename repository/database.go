@@ -46,10 +46,10 @@ func GetSettings() (dbSettings DBSettings){
 		//development environment
 		viper.SetConfigName("config")
 		// Internal tests
-		viper.AddConfigPath("../.")
+		//viper.AddConfigPath("../.")
 
 		// Remote tests
-		//viper.AddConfigPath("./")
+		viper.AddConfigPath("./")
 
 		if err := viper.ReadInConfig(); err != nil {
 			fetchError("Error reading config file %s", err)
@@ -228,8 +228,10 @@ func GetAccountByCredentials(credentials pb_account.Credentials) (account *pb_ac
 		return account, nil
 	}
 	//account not found
-	tracelog.Warning("database", "GetAccountByCredentials", "Account not found, return nil")
-	return nil, nil
+	tracelog.Warning("database", "GetAccountByCredentials", "Account not found, return empty account")
+
+	fakeAccount := genFakeAccount()
+	return fakeAccount, err
 }
 
 func GetAccountByToken(token pb_account.Token) (account *pb_account.Account, dberr error) {
@@ -270,10 +272,24 @@ func GetAccountByToken(token pb_account.Token) (account *pb_account.Account, dbe
 		return account, nil
 	}
 	//account not found
-	tracelog.Warning("database", "GetAccountByToken", "Account not found, return nil")
-	dberr = err
-	return nil, dberr
+	tracelog.Warning("database", "GetAccountByToken", "Account not found, return empty account")
+	//Return a fake account
+	fakeAccount := genFakeAccount()
+	return fakeAccount, err
 }
+
+func genFakeAccount() (fakeAccount *pb_account.Account) {
+	token := GenerateToken("fake", "fake")
+	fakeToken := pb_account.Token{token}
+	fakeStatus := pb_account.Status{pb_account.Status_NOTSET}
+
+	fakeAccount = &pb_account.Account{}
+	fakeAccount.Token = &fakeToken
+	fakeAccount.Status = &fakeStatus
+
+	return fakeAccount
+}
+
 
 func RemoveDoc(token pb_account.Token) (err error){
 

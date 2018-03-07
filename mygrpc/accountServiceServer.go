@@ -56,21 +56,20 @@ func (s *AccountServiceServer) GetAccountByCredentials(ctx context.Context, cred
 
 	if err != nil {
 		emptyAccount := pb_account.Account{}
-		account = &emptyAccount
-		return account, err
+		return &emptyAccount, err
 	}
 
 	return account, nil
 }
 
 // Get an Account given the Token
-func (s *AccountServiceServer) GetAccountByToken (ctx context.Context, token *pb_account.Token)  (*pb_account.Account, error) {
+func (s *AccountServiceServer) GetAccountByToken (ctx context.Context, token *pb_account.Token)  ( *pb_account.Account, error) {
 
 	account, err := repository.GetAccountByToken(*token)
 
 	if err != nil {
-		account = &pb_account.Account{}
-		return account, err
+		emptyAccount := pb_account.Account{}
+		return &emptyAccount, err
 	}
 
 	return account, nil
@@ -123,7 +122,7 @@ func (s *AccountServiceServer) CheckEmail (ctx context.Context, email *pb_accoun
 	if err != nil {
 		// No email found
 		response = pb_account.Response{ 400, token}
-		return &response, err
+		return &response, nil
 	}
 
 	// Email found
@@ -156,7 +155,7 @@ func (s *AccountServiceServer) SetAccountStatus (ctx context.Context, updateStat
 	if err != nil {
 		// No email found
 		response = pb_account.Response{ 400, updateStatus.Token}
-		return &response, err
+		return &response, nil
 	}
 
 	// Email found

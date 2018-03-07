@@ -47,7 +47,7 @@ func GetSettings() (dbSettings DBSettings){
 		viper.SetConfigName("config")
 		// Internal tests
 		//viper.AddConfigPath("../.")
-
+	
 		// Remote tests
 		viper.AddConfigPath("./")
 

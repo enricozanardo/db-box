@@ -35,7 +35,7 @@ func GetSettings() (dbSettings DBSettings){
 
 	DBuser := os.Getenv("COUCHDB_USER")
 	DBpassword := os.Getenv("COUCHDB_PASSWORD")
-	DBaddress := os.Getenv("COUCHDB_PORT_5984_TCP_ADDR") //  localhost
+	DBaddress := os.Getenv("COUCHDB_PORT_5984_TCP_ADDR") //  database
 	DBport := os.Getenv("COUCHDB_PORT_5984_TCP_PORT") //  5984
 	DBname := os.Getenv("DBNAME")
 	DBurl := DBaddress + ":" + DBport

@@ -1,6 +1,6 @@
 package job
 
-import "github.com/claudiu/gocron"
+import "github.com/jasonlvhit/gocron"
 
 // Every day at 23:59 check the status of the account
 func CheckAccountStatus() {

@@ -3,8 +3,8 @@ build:
   image: iron/go:dev
   commands:
     - go get
-#    - go get -u github.com/Masterminds/glide
-#    - glide install
+    - go get -u github.com/Masterminds/glide
+    - glide install
     - go build
     - go test -v ./utils
     - go test -v ./job

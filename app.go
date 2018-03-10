@@ -8,6 +8,7 @@ import (
 	"github.com/goinggo/tracelog"
 	"os"
 	"github.com/spf13/viper"
+	"github.com/onezerobinary/db-box/job"
 )
 
 const (
@@ -28,6 +29,9 @@ func main() {
 	}
 
 	tracelog.Warning("main", "main", "Using config file")
+
+	// Start the cronjob that must check the status of the accounts
+	go job.CheckAccountStatus()
 
 	listen, err := net.Listen("tcp", GRPC_PORT)
 	if err != nil {

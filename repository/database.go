@@ -487,7 +487,11 @@ func GetAccountsByStatus(status pb_account.Status) (accounts *pb_account.Account
 			value = 0
 	}
 
-	output := fmt.Sprintf("{\"selector\":{\"status.status\":{\"$eq\": %v }}}", value)
+	output := fmt.Sprintf("{\"selector\":{\"status\":{}}}")
+
+	if value != 0 {
+		output = fmt.Sprintf("{\"selector\":{\"status.status\":{\"$eq\": %v }}}", value)
+	}
 
 	queryResults, err := db.QueryDocuments(output)
 

@@ -7,6 +7,7 @@ import (
 	"github.com/onezerobinary/db-box/mygrpc"
 	"github.com/goinggo/tracelog"
 	"os"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -17,6 +18,16 @@ func main() {
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	//development environment
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		tracelog.Errorf(err, "main", "main", "Error reading config file")
+	}
+
+	tracelog.Warning("main", "main", "Using config file")
 
 	listen, err := net.Listen("tcp", GRPC_PORT)
 	if err != nil {

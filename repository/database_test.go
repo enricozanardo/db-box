@@ -5,12 +5,25 @@ import (
 	pb_account "github.com/onezerobinary/db-box/proto/account"
 	"fmt"
 	"github.com/goinggo/tracelog"
+	"github.com/spf13/viper"
 )
+
+
+func startConfig(){
+	viper.SetConfigName("config")
+	viper.AddConfigPath("../")
+
+	if err := viper.ReadInConfig(); err != nil {
+		tracelog.Errorf(err, "database_test", "StartConfig", "Error reading config file")
+	}
+}
 
 func TestConnectToDB(t *testing.T){
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	startConfig()
 
 	db, err := ConnectToDB()
 
@@ -25,6 +38,8 @@ func TestAddDoc(t *testing.T) {
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	startConfig()
 
 	//fakeToken := pb_account.Token{"fff"}
 	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
@@ -59,6 +74,7 @@ func TestIsPresent(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
 
 	fakeCredentials := pb_account.Credentials{}
 
@@ -90,6 +106,8 @@ func TestGetAccountByCredentials(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
+
 	fakeCredentials := pb_account.Credentials{}
 
 	fakeCredentials.Username = "Pino"
@@ -118,6 +136,8 @@ func TestGetAccountByToken(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
+
 	fakeCredentials := pb_account.Credentials{}
 
 	fakeCredentials.Username = "Pino"
@@ -140,33 +160,12 @@ func TestGetAccountByToken(t *testing.T) {
 	}
 }
 
-func TestRemoveDoc(t *testing.T) {
-
-	tracelog.Start(tracelog.LevelTrace)
-	defer tracelog.Stop()
-
-	fakeCredentials := pb_account.Credentials{}
-
-	fakeCredentials.Username = "john"
-	fakeCredentials.Password = "doe"
-
-	token := pb_account.Token{}
-
-	to := GenerateToken(fakeCredentials.Username, fakeCredentials.Password)
-
-	token.Token = to
-
-	err := RemoveDoc(token)
-
-	if err != nil {
-		t.Errorf("Error to delete the account")
-	}
-}
-
 func TestUpdateDoc(t *testing.T) {
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	startConfig()
 
 	// Create and add an account to the DB
 	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
@@ -209,6 +208,8 @@ func TestCheckEmail(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
+
 	email := pb_account.Email{ "Mary"}
 
 	token, err := CheckEmail(email)
@@ -227,6 +228,8 @@ func TestSetAccountStatus(t *testing.T) {
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	startConfig()
 
 	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
 	account, err := GetAccountByToken(token)
@@ -254,6 +257,8 @@ func TestGetAccountStatus(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
+
 	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
 	account, err := GetAccountByToken(token)
 
@@ -277,11 +282,12 @@ func TestGetAccountStatus(t *testing.T) {
 	}
 }
 
-
 func TestGetAccountsByStatus(t *testing.T) {
 
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
+
+	startConfig()
 
 	accountStatus := pb_account.Status{pb_account.Status_ENABLED}
 
@@ -305,6 +311,8 @@ func TestGetAccounts(t *testing.T) {
 	tracelog.Start(tracelog.LevelTrace)
 	defer tracelog.Stop()
 
+	startConfig()
+
 	acconts, err := GetAccounts()
 
 	if err != nil {
@@ -316,5 +324,30 @@ func TestGetAccounts(t *testing.T) {
 		tracelog.Trace("database_test", "TestGetAccounts" , text)
 	} else {
 		t.Errorf("Accounts not retrieved")
+	}
+}
+
+func TestRemoveDoc(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeCredentials := pb_account.Credentials{}
+
+	fakeCredentials.Username = "john"
+	fakeCredentials.Password = "doe"
+
+	token := pb_account.Token{}
+
+	to := GenerateToken(fakeCredentials.Username, fakeCredentials.Password)
+
+	token.Token = to
+
+	err := RemoveDoc(token)
+
+	if err != nil {
+		t.Errorf("Error to delete the account")
 	}
 }

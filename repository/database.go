@@ -43,21 +43,6 @@ func GetSettings() (dbSettings DBSettings){
 	// if no production settings are found use the local settings
 	if len(DBaddress) == 0 {
 
-		//development environment
-		viper.SetConfigName("config")
-		// Internal tests
-		//viper.AddConfigPath("../.")
-
-		// Remote tests
-		viper.AddConfigPath("./")
-
-		if err := viper.ReadInConfig(); err != nil {
-			fetchError("Error reading config file %s", err)
-		}
-		// Confirm which config file is used
-		writeLog("Using config: %s\n", viper.ConfigFileUsed())
-		fmt.Printf("Using config: %s\n", viper.ConfigFileUsed())
-
 		// Set the variables reading from the config.yaml file
 		DBuser = viper.GetString("database.username")
 		DBpassword = viper.GetString("database.password")

@@ -191,3 +191,14 @@ func (s *AccountServiceServer) GetAccounts (ctx context.Context, empty *pb_accou
 	return accounts, nil
 }
 
+//  rpc AddExpoPushToken (ExpoPushToken) returns (ExpoResponse) {}
+func (s *AccountServiceServer) AddExpoPushToken (ctx context.Context, expoPushToken *pb_account.ExpoPushToken) (*pb_account.ExpoResponse, error) {
+
+	ok, err := repository.AddExpoPushToken(expoPushToken)
+
+	if err != nil {
+		return &ok, err
+	}
+
+	return &ok, nil
+}

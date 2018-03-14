@@ -307,9 +307,8 @@ func UpdateDoc(account pb_account.Account) (err error){
 	tracelog.Trace("database", "UpdateDoc", text)
 
 	if err != nil {
-		tracelog.Errorf(err, "database", "RemoveDoc", "Error to update account to the DB")
-		os.Exit(1)
-		return
+		tracelog.Errorf(err, "database", "UpdateDoc", "Error to update account to the DB")
+		return err
 	}
 
 	return
@@ -565,5 +564,63 @@ func GetAccounts() (accounts *pb_account.Accounts, err error){
 	tracelog.Trace("database", "GetAccounts", "Done, return all the Accounts")
 
 	return &accountList, nil
+}
+
+
+func AddExpoPushToken(expoPushToken *pb_account.ExpoPushToken) ( response pb_account.ExpoResponse, err error ) {
+
+	// Retreive the user
+	accountToken := *expoPushToken.Token
+
+	account, err := GetAccountByToken(accountToken)
+
+	response.Response = false
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "AddExpoPushToken", "It was not possible to get the account")
+		return response, err
+	}
+
+	// Add devices only for active accounts
+	if account.Status.Status != pb_account.Status_ENABLED {
+		err = errors.New("Account not Active")
+		return response, err
+	}
+
+	accountDeviceTokens := account.Expopushtoken
+	deviceToken := expoPushToken.Expotoken
+
+	elements := 0
+
+	if len(accountDeviceTokens) == 0 {
+		accountDeviceTokens = append(accountDeviceTokens, deviceToken)
+		elements = elements + 1
+	}
+
+	// insert/update the device token to the user
+	for _, token := range accountDeviceTokens {
+
+		if deviceToken != token {
+			//Add to the list
+			accountDeviceTokens = append(accountDeviceTokens, deviceToken)
+			elements = elements + 1
+		}
+	}
+
+	// Update the document!
+	if elements > 0 {
+
+		account.Expopushtoken = accountDeviceTokens
+
+		err := UpdateDoc(*account)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "AddExpoPushToken", "It was not possible to update the account")
+		}
+	}
+
+	response.Response = true
+
+	return response, nil
 }
 

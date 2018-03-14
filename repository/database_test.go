@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-
 func startConfig(){
 	viper.SetConfigName("config")
 	viper.AddConfigPath("../")
@@ -44,8 +43,8 @@ func TestAddDoc(t *testing.T) {
 	//fakeToken := pb_account.Token{"fff"}
 	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
 
-	username := "Pino"
-	password := "Mancuso"
+	username := "enrico@enrico.com"
+	password := "enrico"
 
 	faketoken := GenerateToken(username, password)
 
@@ -58,6 +57,7 @@ func TestAddDoc(t *testing.T) {
 		"Account",
 		"2018-01-11",
 		"2028-01-10",
+		nil,
 	}
 
 	token, err :=  AddDoc(fakeAccount)
@@ -78,8 +78,8 @@ func TestIsPresent(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "Pino"
-	fakeCredentials.Password = "Mancuso"
+	fakeCredentials.Username = "enrico@enrico.com"
+	fakeCredentials.Password = "enrico"
 
 	token := pb_account.Token{}
 
@@ -110,8 +110,8 @@ func TestGetAccountByCredentials(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "Pino"
-	fakeCredentials.Password = "Mancuso"
+	fakeCredentials.Username = "enrico@enrico.com"
+	fakeCredentials.Password = "enrico"
 
 	token := pb_account.Token{}
 
@@ -140,8 +140,8 @@ func TestGetAccountByToken(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "Pino"
-	fakeCredentials.Password = "Mancuso"
+	fakeCredentials.Username = "enrico@enrico.com"
+	fakeCredentials.Password = "enrico"
 
 	token := pb_account.Token{}
 
@@ -170,8 +170,8 @@ func TestUpdateDoc(t *testing.T) {
 	// Create and add an account to the DB
 	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
 
-	username := "Mary"
-	password := "Rossi"
+	username := "enrico@enrico.com"
+	password := "enrico"
 
 	faketoken := GenerateToken(username, password)
 
@@ -184,6 +184,7 @@ func TestUpdateDoc(t *testing.T) {
 		"Account",
 		"2018-01-11",
 		"2028-01-10",
+		nil,
 	}
 
 	token, err :=  AddDoc(fakeAccount)
@@ -231,7 +232,7 @@ func TestSetAccountStatus(t *testing.T) {
 
 	startConfig()
 
-	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
+	token := pb_account.Token{Token:"2284fe70432bbef5a5354653c88d8e5cda2880dd"}
 	account, err := GetAccountByToken(token)
 
 	if err != nil {
@@ -240,7 +241,7 @@ func TestSetAccountStatus(t *testing.T) {
 
 	if account != nil {
 
-		account.Status = &pb_account.Status{pb_account.Status_REVOKED}
+		account.Status = &pb_account.Status{pb_account.Status_ENABLED}
 		accountUpdateStatus := pb_account.UpdateStatus{&token, account.Status}
 
 		err = SetAccountStatus(accountUpdateStatus)
@@ -259,7 +260,7 @@ func TestGetAccountStatus(t *testing.T) {
 
 	startConfig()
 
-	token := pb_account.Token{Token:"4cf33dd47ca98903efd2e688dc68c56fa305230b"}
+	token := pb_account.Token{Token:"2284fe70432bbef5a5354653c88d8e5cda2880dd"}
 	account, err := GetAccountByToken(token)
 
 	if err != nil {
@@ -327,6 +328,30 @@ func TestGetAccounts(t *testing.T) {
 	}
 }
 
+func TestAddExpoPushToken(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	token := pb_account.Token{"2284fe70432bbef5a5354653c88d8e5cda2880dd"}
+
+	accountPushToken := pb_account.ExpoPushToken{}
+	accountPushToken.Token = &token
+	accountPushToken.Expotoken = "ExponentPushToken[uaT9EBFnTnEUW78GfiSVaO]"
+
+	resp, err := AddExpoPushToken(&accountPushToken)
+
+	if err != nil {
+		t.Errorf("Error: It was not possible to add the expoToken. ", err)
+	}
+
+	if !resp.Response {
+		t.Errorf("Response not valid! ExpoToken not added. ")
+	}
+}
+
 func TestRemoveDoc(t *testing.T) {
 
 	tracelog.Start(tracelog.LevelTrace)
@@ -336,8 +361,8 @@ func TestRemoveDoc(t *testing.T) {
 
 	fakeCredentials := pb_account.Credentials{}
 
-	fakeCredentials.Username = "john"
-	fakeCredentials.Password = "doe"
+	fakeCredentials.Username = "enrico@enrico.com"
+	fakeCredentials.Password = "enrico"
 
 	token := pb_account.Token{}
 

@@ -46,6 +46,7 @@ func TestCheckAccountStatus(t *testing.T) {
 		"Account",
 		c,
 		e,
+		nil,
 	}
 
 	backToken, err :=  repository.AddDoc(fakeAccount)

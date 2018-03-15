@@ -168,7 +168,7 @@ func TestUpdateDoc(t *testing.T) {
 	startConfig()
 
 	// Create and add an account to the DB
-	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
+	fakeStatus := pb_account.Status{pb_account.Status_ENABLED}
 
 	username := "enrico@enrico.com"
 	password := "enrico"

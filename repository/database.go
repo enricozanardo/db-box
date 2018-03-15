@@ -589,27 +589,20 @@ func AddExpoPushToken(expoPushToken *pb_account.ExpoPushToken) ( response pb_acc
 
 	accountDeviceTokens := account.Expopushtoken
 	deviceToken := expoPushToken.Expotoken
+	alreadyPresent := false
 
-	elements := 0
-
-	if len(accountDeviceTokens) == 0 {
-		accountDeviceTokens = append(accountDeviceTokens, deviceToken)
-		elements = elements + 1
-	}
-
-	// insert/update the device token to the user
+	// check if already present
 	for _, token := range accountDeviceTokens {
-
-		if deviceToken != token {
-			//Add to the list
-			accountDeviceTokens = append(accountDeviceTokens, deviceToken)
-			elements = elements + 1
+		if token == deviceToken {
+			alreadyPresent = true
 		}
 	}
 
-	// Update the document!
-	if elements > 0 {
+	// insert/update the device token to the user
+	if !alreadyPresent || len(accountDeviceTokens) == 0 {
+		accountDeviceTokens = append(accountDeviceTokens, deviceToken)
 
+		// Update the document!
 		account.Expopushtoken = accountDeviceTokens
 
 		err := UpdateDoc(*account)

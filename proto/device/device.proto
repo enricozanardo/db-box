@@ -1,0 +1,58 @@
+// protoc -I proto/ proto/device/device.proto --go_out=plugins=grpc:proto
+
+syntax = "proto3";
+package device;
+
+/*
+* Represent the Account service
+*/
+service DeviceService {
+
+    // Add a device
+    rpc AddDevice (Device) returns (Response) {}
+
+    // Get Device
+    rpc GetDeviceByExpoToken (ExpoPushToken) returns (Device) {}
+
+    // Update Status
+    rpc UpdateStatus (Status) returns (Response) {}
+
+    // Update Status
+    rpc UpdatePosition (Position) returns (Response) {}
+
+    // Update Status
+    rpc UpdateMobileNumber (MobileNumber) returns (Response) {}
+}
+
+message ExpoPushToken {
+    string expopushtoken = 1;
+}
+
+message Device {
+    ExpoPushToken expopushtoken = 1;
+    bool active = 2;
+    float latitude = 3;
+    float longitude = 4;
+    string mobilenumber = 5;
+}
+
+message Status {
+    ExpoPushToken expopushtoken = 1;
+    bool active = 2;
+}
+
+message Position {
+    ExpoPushToken expopushtoken = 1;
+    float latitude = 3;
+    float longitude = 4;
+}
+
+message MobileNumber {
+    ExpoPushToken expopushtoken = 1;
+    string mobilenumber = 2;
+}
+
+message Response {
+    bool response = 1;
+}
+

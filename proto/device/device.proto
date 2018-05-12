@@ -4,7 +4,7 @@ syntax = "proto3";
 package device;
 
 /*
-* Represent the Account service
+* Represent the Device service
 */
 service DeviceService {
 
@@ -14,13 +14,13 @@ service DeviceService {
     // Get Device
     rpc GetDeviceByExpoToken (ExpoPushToken) returns (Device) {}
 
-    // Update Status
+    // Update Device Status
     rpc UpdateStatus (Status) returns (Response) {}
 
-    // Update Status
+    // Update Device Position
     rpc UpdatePosition (Position) returns (Response) {}
 
-    // Update Status
+    // Update Device MobileNumber
     rpc UpdateMobileNumber (MobileNumber) returns (Response) {}
 }
 
@@ -30,10 +30,11 @@ message ExpoPushToken {
 
 message Device {
     ExpoPushToken expopushtoken = 1;
-    bool active = 2;
-    float latitude = 3;
-    float longitude = 4;
-    string mobilenumber = 5;
+    string type = 2;
+    bool active = 3;
+    float latitude = 4;
+    float longitude = 5;
+    string mobilenumber = 6;
 }
 
 message Status {
@@ -55,4 +56,3 @@ message MobileNumber {
 message Response {
     bool response = 1;
 }
-

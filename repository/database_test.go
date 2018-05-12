@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/goinggo/tracelog"
 	"github.com/spf13/viper"
+	pb_device "github.com/onezerobinary/db-box/proto/device"
 )
 
 func startConfig(){
@@ -376,3 +377,136 @@ func TestRemoveDoc(t *testing.T) {
 		t.Errorf("Error to delete the account")
 	}
 }
+
+
+// Test Device methods
+func TestDeviceIsPresent(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeDeviceToken := pb_device.ExpoPushToken{}
+
+	fakeDeviceToken.Expopushtoken = "abcd"
+
+	p := DeviceIsPresent(fakeDeviceToken.Expopushtoken)
+
+	if !p {
+		t.Error("Element not present: ", fakeDeviceToken.Expopushtoken)
+	}
+}
+
+func TestAddDevice(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	expoPushToken := pb_device.ExpoPushToken{ "ExponentPushToken[VqalPOCUT5DVmVUpf6Qq3A]"}
+
+	fakeDevice := pb_device.Device{
+		Expopushtoken: &expoPushToken,
+		Type: "Device",
+		Active: true,
+		Latitude: 12.999,
+		Longitude: 45.3456,
+		Mobilenumber: "123123456789",
+	}
+
+	ok, _ := AddDevice(&fakeDevice)
+
+	if (!ok.Response) {
+		t.Error("It was not possible to store the document into the DB")
+	}
+}
+
+func TestGetDeviceByExpoToken(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeExpoPushToken := pb_device.ExpoPushToken{ "ExponentPushToken[VqalPOCUT5DVmVUpf6Qq3A]"}
+
+	dev, _ := GetDeviceByExpoToken(&fakeExpoPushToken)
+
+	if (dev.Expopushtoken.Expopushtoken != fakeExpoPushToken.Expopushtoken) {
+		t.Error("It was not possible to get the device back")
+	} else {
+		fmt.Println("Device info:", dev.Expopushtoken)
+	}
+}
+
+
+func TestUpdateStatus(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeExpoPushToken := pb_device.ExpoPushToken{ "ExponentPushToken[VqalPOCUT5DVmVUpf6Qq3A]"}
+	status := pb_device.Status{}
+	status.Expopushtoken = &fakeExpoPushToken
+	status.Active = true
+
+	updated, _ := UpdateStatus(&status)
+
+	if (!updated.Response) {
+		t.Error("It was not possible to updated the device")
+	} else {
+		fmt.Println("Device updated? ", updated.Response)
+	}
+}
+
+func TestUpdatePosition(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeExpoPushToken := pb_device.ExpoPushToken{ "ExponentPushToken[VqalPOCUT5DVmVUpf6Qq3A]"}
+
+	position := pb_device.Position{}
+	position.Expopushtoken = &fakeExpoPushToken
+	position.Latitude = 19.999
+	position.Longitude = 07.1987
+
+	updated, _ := UpdatePosition(&position)
+
+	if !updated.Response {
+		t.Error("It was not possible to updated the device")
+	} else {
+		fmt.Println("Device updated? ", updated.Response)
+	}
+}
+
+func TestUpdateMobileNumber(t *testing.T) {
+
+	tracelog.Start(tracelog.LevelTrace)
+	defer tracelog.Stop()
+
+	startConfig()
+
+	fakeExpoPushToken := pb_device.ExpoPushToken{ "ExponentPushToken[VqalPOCUT5DVmVUpf6Qq3A]"}
+
+	mobile := pb_device.MobileNumber{}
+	mobile.Expopushtoken = &fakeExpoPushToken
+	mobile.Mobilenumber = "987654321"
+
+	updated, _ := UpdateMobileNumber(&mobile)
+
+	if !updated.Response {
+		t.Error("It was not possible to updated the device")
+	} else {
+		fmt.Println("Device updated? ", updated.Response)
+	}
+}
+
+
+

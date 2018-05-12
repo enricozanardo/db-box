@@ -14,6 +14,8 @@ import (
 	"io"
 	"github.com/goinggo/tracelog"
 	"errors"
+	pb_device "github.com/onezerobinary/db-box/proto/device"
+	"github.com/satori/go.uuid"
 )
 
 type DBSettings struct {
@@ -102,6 +104,10 @@ func ConnectToDB() (db couchdb.CouchDatabase, err error) {
 
 	return db, nil
 }
+
+// ##############################################
+// #############  Accounts Methods ################
+// ##############################################
 
 func IsPresent(uuid string) bool {
 
@@ -273,6 +279,24 @@ func genFakeAccount() (fakeAccount *pb_account.Account) {
 	fakeAccount.Status = &fakeStatus
 
 	return fakeAccount
+}
+
+func genFakeDevice() (fakeDevice *pb_device.Device){
+
+	randomUuid, _ := uuid.NewV4()
+	id := randomUuid.String()
+
+	fakeExpoPushToken := pb_device.ExpoPushToken{id}
+
+	fakeDevice = &pb_device.Device{}
+	fakeDevice.Expopushtoken = &fakeExpoPushToken
+	fakeDevice.Active = true
+	fakeDevice.Type = "Device"
+	fakeDevice.Mobilenumber = "3420980217"
+	fakeDevice.Latitude = 19.76
+	fakeDevice.Longitude = 1.82
+
+	return
 }
 
 
@@ -617,3 +641,247 @@ func AddExpoPushToken(expoPushToken *pb_account.ExpoPushToken) ( response pb_acc
 	return response, nil
 }
 
+// ##############################################
+// #############  Device Methods ################
+// ##############################################
+
+func DeviceIsPresent(expopushtoken string) bool {
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "DeviceIsPresent", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	queryString := "{\"selector\":{\"_id\":{\"$eq\":\""+ expopushtoken +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "DeviceIsPresent", "Error to search doc to the DB")
+		os.Exit(1)
+	}
+
+	present := false
+
+	for k, _ := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "DeviceIsPresent", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database", "DeviceIsPresent", "Device is present")
+		present = true
+	}
+
+	tracelog.Completed("database","DeviceIsPresent")
+	return present
+}
+
+
+func AddDevice (device *pb_device.Device) (response pb_device.Response, err error) {
+
+	// Marshal the document in Json
+	jsonDoc, _ := json.Marshal(device)
+
+	deviceID := device.Expopushtoken.Expopushtoken
+
+	rev := ""
+
+	db, _ := ConnectToDB()
+
+	// check that the device is NOT already present into the DB
+	present := DeviceIsPresent(deviceID)
+
+	if (present) {
+		tracelog.Errorf(err, "database", "AddDevice", "Error to add device to the DB")
+		response.Response = false
+		return response, nil
+	}
+
+	// Store the document into the DB
+	_, err = db.SaveDoc(deviceID, rev, & couchdb.CouchDoc{JSONValue: jsonDoc, Attachments: nil})
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "AddDevice", "Error to add device to the DB")
+		response.Response = false
+		return response, nil
+	}
+
+	tracelog.Completed("database","AddDevice")
+
+	response.Response = true
+
+	return response, nil
+}
+
+// Get Device
+func GetDeviceByExpoToken (expoPushToken *pb_device.ExpoPushToken) (device pb_device.Device, err error) {
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetDeviceByExpoToken", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	stringToken := expoPushToken.Expopushtoken
+
+	queryString := "{\"selector\":{\"_id\":{\"$eq\":\""+ stringToken +"\"}}}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetDeviceByExpoToken", "Error to search doc to the DB")
+	}
+
+	for k, v := range *queryResults {
+		if k > 0 {
+			tracelog.Errorf(err, "database", "GetDeviceByExpoToken", "Error more then one entry found in the DB")
+			os.Exit(1)
+		}
+
+		//account found!
+		value := v.Value
+		err := json.Unmarshal(value[:], &device)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetDeviceByExpoToken", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		tracelog.Trace("database","GetDeviceByExpoToken","Account found")
+		return device, nil
+	}
+	//account not found
+	tracelog.Warning("database", "GetDeviceByExpoToken", "Account not found, return empty account")
+	//Return a fake device
+	fakeDevice := genFakeDevice()
+	return *fakeDevice, err
+}
+
+
+// Update Device Status
+func UpdateStatus (status *pb_device.Status) (response pb_device.Response, err error) {
+	db, err := ConnectToDB()
+	// Get revision
+	doc, revision, err :=  db.ReadDoc(status.Expopushtoken.Expopushtoken)
+
+	if err != nil || doc == nil {
+		response.Response = false
+		return response, nil
+	}
+
+	// Unmarshal the json document
+	device := pb_device.Device{}
+
+	value := doc.JSONValue
+	err = json.Unmarshal(value[:], &device)
+
+	// Update its value
+	device.Active = status.Active
+
+	// Marshal the document in Json
+	jsonDoc, _ := json.Marshal(&device)
+
+	deviceId := status.Expopushtoken.Expopushtoken
+
+	// Store the document into the DB
+	text, err := db.SaveDoc(deviceId, revision, & couchdb.CouchDoc{JSONValue: jsonDoc, Attachments: nil})
+
+	tracelog.Trace("database", "UpdateStatus", text)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "UpdateStatus", "Error to update device to the DB")
+		response.Response = false
+		return response, nil
+	}
+
+	response.Response = true
+
+	return response, nil
+}
+
+// Update Device Position
+func UpdatePosition (position *pb_device.Position) ( response pb_device.Response, err error) {
+	db, err := ConnectToDB()
+	// Get revision
+	doc, revision, err :=  db.ReadDoc(position.Expopushtoken.Expopushtoken)
+
+	if err != nil || doc == nil {
+		response.Response = false
+		return response, nil
+	}
+
+	// Unmarshal the json document
+	device := pb_device.Device{}
+
+	value := doc.JSONValue
+	err = json.Unmarshal(value[:], &device)
+
+	// Update its value
+	device.Latitude = position.Latitude
+	device.Longitude = position.Longitude
+
+	// Marshal the document in Json
+	jsonDoc, _ := json.Marshal(&device)
+
+	deviceId := position.Expopushtoken.Expopushtoken
+
+	// Store the document into the DB
+	text, err := db.SaveDoc(deviceId, revision, & couchdb.CouchDoc{JSONValue: jsonDoc, Attachments: nil})
+
+	tracelog.Trace("database", "UpdatePosition", text)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "UpdatePosition", "Error to update device to the DB")
+		response.Response = false
+		return response, nil
+	}
+
+	response.Response = true
+
+	return response, nil
+}
+
+// Update Device MobileNumber
+func UpdateMobileNumber (mobileNumber *pb_device.MobileNumber)  (response pb_device.Response, err error) {
+	db, err := ConnectToDB()
+	// Get revision
+	doc, revision, err :=  db.ReadDoc(mobileNumber.Expopushtoken.Expopushtoken)
+
+	if err != nil || doc == nil {
+		response.Response = false
+		return response, nil
+	}
+
+	// Unmarshal the json document
+	device := pb_device.Device{}
+
+	value := doc.JSONValue
+	err = json.Unmarshal(value[:], &device)
+
+	// Update its value
+	device.Mobilenumber = mobileNumber.Mobilenumber
+
+	// Marshal the document in Json
+	jsonDoc, _ := json.Marshal(&device)
+
+	deviceId := mobileNumber.Expopushtoken.Expopushtoken
+
+	// Store the document into the DB
+	text, err := db.SaveDoc(deviceId, revision, & couchdb.CouchDoc{JSONValue: jsonDoc, Attachments: nil})
+
+	tracelog.Trace("database", "UpdateMobileNumber", text)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "UpdateMobileNumber", "Error to update device to the DB")
+		response.Response = false
+		return response, nil
+	}
+
+	response.Response = true
+
+	return response, nil
+}

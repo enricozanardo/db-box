@@ -2,7 +2,7 @@
 build:
   image: iron/go:dev
   commands:
-    - go get
+    - go get -tags nopkcs11
     - go get -u github.com/Masterminds/glide
     - glide install
     - go build

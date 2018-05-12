@@ -12,5 +12,6 @@ RUN cd $SRC_DIR; glide install
 RUN cd $SRC_DIR; cp config.yaml /app/.
 
 # Run the application
+# Run the application
 RUN cd $SRC_DIR; go build -o db-box; cp db-box /app/
 ENTRYPOINT ["./db-box"]

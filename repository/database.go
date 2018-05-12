@@ -93,7 +93,9 @@ func ConnectToDB() (db couchdb.CouchDatabase, err error) {
 
 	db = couchdb.CouchDatabase{CouchInstance: couchDBInstance, DBName: dbName}
 
-	_, err = db.CreateDatabaseIfNotExist()
+	resp, err := db.CreateDatabaseIfNotExist()
+
+	fmt.Println(resp)
 
 	if err != nil {
 		tracelog.Errorf(err, "database", "ConnectToDB", "Error to create the DB")

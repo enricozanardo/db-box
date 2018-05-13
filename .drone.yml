@@ -2,9 +2,10 @@
 build:
   image: iron/go:dev
   commands:
+#    - go get
 #    - go get -tags nopkcs11
-#    - go get -tags nopkcs11
-    - go get -t -v github.com/miekg/pkcs11/...
+#    - go get -t -v github.com/miekg/pkcs11/...
+    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
     - go get -u github.com/Masterminds/glide
     - glide install
     - go build

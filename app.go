@@ -9,6 +9,7 @@ import (
 	"os"
 	"github.com/spf13/viper"
 	"github.com/onezerobinary/db-box/job"
+	pb_mobile "github.com/onezerobinary/db-box/proto/device"
 )
 
 const (
@@ -42,8 +43,9 @@ func main() {
 	grpcServer := grpc.NewServer()
 	// Add to the grpcServer the Service
 	pb_account.RegisterAccountServiceServer(grpcServer, &mygrpc.AccountServiceServer{})
+	pb_mobile.RegisterDeviceServiceServer(grpcServer, &mygrpc.DeviceServiceServer{})
 
-	tracelog.Trace("app", "main", "Grpc Server Listening on port 1982")
+	tracelog.Trace("app", "main", "Grpc Server Listening on port ", GRPC_PORT)
 
 	grpcServer.Serve(listen)
 }

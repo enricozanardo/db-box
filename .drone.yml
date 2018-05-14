@@ -6,7 +6,7 @@ build:
 #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
     - go get -u github.com/Masterminds/glide
     - glide install
-    - go build
+    - go build --tags nopkcs11
     - go test -v ./utils
     - go test -v ./job
     - go test -v ./repository

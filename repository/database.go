@@ -889,3 +889,50 @@ func UpdateMobileNumber (mobileNumber *pb_device.MobileNumber)  (response pb_dev
 
 	return response, nil
 }
+
+
+// Get DeviceList
+func GetExpoPushTokensByGeoHash (geohash string) (expoPushTokens []string, err error) {
+
+	db, err := ConnectToDB()
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetExpoPushTokensByGeoHash", "Error to connect to the DB")
+		os.Exit(1)
+	}
+
+	queryString := "{\"selector\": {" +
+		"\"geohash\": {" +
+		"\"$regex\":\"^" + geohash + ",*\"}" +
+		"}" +
+		"}"
+
+	queryResults, err := db.QueryDocuments(queryString)
+
+	if err != nil {
+		tracelog.Errorf(err, "database", "GetExpoPushTokensByGeoHash", "Error to search doc to the DB")
+	}
+
+	for _, v := range *queryResults {
+
+		device := pb_device.Device{}
+
+		//account found!
+		err := json.Unmarshal(v.Value[:], &device)
+
+		if err != nil {
+			tracelog.Errorf(err, "database", "GetExpoPushTokensByGeoHash", "Error to get the doc from the DB")
+			os.Exit(1)
+		}
+
+		expoPushTokens = append(expoPushTokens, device.Expopushtoken.Expopushtoken)
+		tracelog.Trace("database","GetExpoPushTokensByGeoHash","ExpoPushToken added to the list")
+	}
+
+	if len(expoPushTokens) == 0 {
+		tracelog.Warning("database", "GetExpoPushTokensByGeoHash", "No devices found, return an empty array")
+		expoPushTokens = []string{}
+	}
+
+	return expoPushTokens, nil
+}

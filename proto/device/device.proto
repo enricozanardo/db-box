@@ -22,10 +22,22 @@ service DeviceService {
 
     // Update Device MobileNumber
     rpc UpdateMobileNumber (MobileNumber) returns (Response) {}
+
+    // Get list of tokens based on the GeoHash
+    rpc GetExpoPushTokensByGeoHash (GeoHash) returns (ExpoPushTokens) {}
+
 }
 
 message ExpoPushToken {
     string expopushtoken = 1;
+}
+
+message GeoHash {
+    string geohash = 1;
+}
+
+message ExpoPushTokens {
+    repeated string token = 1;
 }
 
 message Device {

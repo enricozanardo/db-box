@@ -55,3 +55,16 @@ func (s *DeviceServiceServer) UpdateMobileNumber (ctx context.Context, mobileNum
 
 	return &response, nil
 }
+
+func (s *DeviceServiceServer) GetExpoPushTokensByGeoHash (ctx context.Context, geoHash *pb_mobile.GeoHash) (*pb_mobile.ExpoPushTokens, error) {
+
+	tokens, _ := repository.GetExpoPushTokensByGeoHash(geoHash.Geohash)
+
+	expoPushTokens := pb_mobile.ExpoPushTokens{}
+
+	for _, token := range tokens {
+		expoPushTokens.Token = append(expoPushTokens.Token, token)
+	}
+
+	return &expoPushTokens, nil
+}

@@ -35,6 +35,7 @@ message Device {
     float latitude = 4;
     float longitude = 5;
     string mobilenumber = 6;
+    string geohash = 7;
 }
 
 message Status {

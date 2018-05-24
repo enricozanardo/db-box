@@ -16,6 +16,7 @@ import (
 	"errors"
 	pb_device "github.com/onezerobinary/db-box/proto/device"
 	"github.com/satori/go.uuid"
+	"github.com/mmcloughlin/geohash"
 )
 
 type DBSettings struct {
@@ -695,7 +696,7 @@ func AddDevice (device *pb_device.Device) (response pb_device.Response, err erro
 	present := DeviceIsPresent(deviceID)
 
 	if (present) {
-		tracelog.Errorf(err, "database", "AddDevice", "Error to add device to the DB")
+		tracelog.Warning("database", "AddDevice", "Error to add device to the DB")
 		response.Response = false
 		return response, nil
 	}
@@ -823,6 +824,9 @@ func UpdatePosition (position *pb_device.Position) ( response pb_device.Response
 	// Update its value
 	device.Latitude = position.Latitude
 	device.Longitude = position.Longitude
+
+	// Calculate the new geohash
+	device.Geohash = geohash.Encode(float64(device.Latitude), float64(device.Longitude))
 
 	// Marshal the document in Json
 	jsonDoc, _ := json.Marshal(&device)

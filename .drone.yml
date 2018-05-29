@@ -29,7 +29,7 @@ publish:
   docker:
     storage_driver: overlay
     username: onezerobinary
-    password: $$DOCKER_HUB_PASSWORD
+    password: Ch120772Za
     email: ezanardo@onezerobinary.com
     repo: onezerobinary/db-box
     tag: latest
@@ -39,8 +39,8 @@ publish:
 deploy:
   rancher:
     url: http://139.162.131.149:8080/v1
-    access_key: $$RANCHER_ACCESS_KEY
-    secret_key: $$RANCHER_SECRET_KEY
+    access_key: 8EA7924C1F9A6C1223D4
+    secret_key: kD79uqHL4tiyiUHFhPmEZrTvHcTtmJQFczDVzHny
     service: pulserescue/db-box
     docker_image: onezerobinary/db-box:latest
     when:
@@ -51,7 +51,7 @@ notify:
     host: smtp.webfaction.com
     skip_verify: true
     username: 10b_cicd
-    password: $$CICD_EMAIL_PASSWORD
+    password: D~F+K@D};1=4Se=
     from: cicd@onezerobinary.com
     attachment: build-result.xml
     recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@gmail.com ]

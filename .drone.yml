@@ -43,7 +43,7 @@ deploy:
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
     secrets: [ rancher_access_key, rancher_secret_key ]
-    service: academicdb/db-box
+    service: pulserescue/db-box
     docker_image: onezerobinary/db-box:latest
     when:
       branch: master

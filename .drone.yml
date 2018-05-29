@@ -30,7 +30,6 @@ publish:
     storage_driver: overlay
     username: onezerobinary
     password: $$DOCKER_HUB_PASSWORD
-    secrets: [ docker_hub_password ]
     email: ezanardo@onezerobinary.com
     repo: onezerobinary/db-box
     tag: latest
@@ -42,7 +41,6 @@ deploy:
     url: http://139.162.131.149:8080/v1
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
-    secrets: [ rancher_access_key, rancher_secret_key ]
     service: pulserescue/db-box
     docker_image: onezerobinary/db-box:latest
     when:
@@ -54,7 +52,6 @@ notify:
     skip_verify: true
     username: 10b_cicd
     password: $$CICD_EMAIL_PASSWORD
-    secrets: [ cicd_email_password ]
     from: cicd@onezerobinary.com
     attachment: build-result.xml
     recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@gmail.com ]

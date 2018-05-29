@@ -38,7 +38,7 @@ publish:
 
 deploy:
   rancher:
-    url: http://172.104.152.175:8080/v1
+    url: http://139.162.131.149:8080/v1
     access_key: $$RANCHER_ACCESS_KEY
     secret_key: $$RANCHER_SECRET_KEY
     service: academicdb/db-box

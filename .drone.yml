@@ -12,7 +12,7 @@ pipeline:
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install
-      - cd $GOPATH/src/
+      - cd $GOPATH/src/github.com
       - pwd
       - ls
 #      - go build --tags nopkcs11

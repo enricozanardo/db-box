@@ -4,14 +4,14 @@ pipeline:
     image: iron/go:dev
     pull: true
     commands:
-      - export GOPATH=$HOME/go
+      - export PATH=$GOPATH/bin:$PATH
+#      - export GOBIN=$HOME/go/bin
       - go env
 #      - cd $GOPATH
 #      - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install
-      - cd $HOME/go
       - go build --tags nopkcs11
       - go test -v ./utils
       - go test -v ./job --tags nopkcs11

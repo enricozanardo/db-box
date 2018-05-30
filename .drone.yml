@@ -1,7 +1,7 @@
 ---
 pipeline:
   build:
-    image:  iron/go:dev
+    image:  golang:alpine
     pull: true
     commands:
       - go get --tags nopkcs11

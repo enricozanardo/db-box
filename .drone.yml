@@ -21,7 +21,7 @@ pipeline:
       - glide install
       - cd ..
       - ls
-#      - go build --tags nopkcs11
+      - go build --tags nopkcs11
 #      - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11
 

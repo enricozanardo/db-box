@@ -1,7 +1,7 @@
 ---
 pipeline:
   build:
-    image: golang:alpine
+    image: golang
     pull: true
     commands:
       - go get --tags nopkcs11

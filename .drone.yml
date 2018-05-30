@@ -1,7 +1,7 @@
 ---
 pipeline:
   build:
-    image: golang
+    image: iron/go
     commands:
       - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
@@ -21,22 +21,22 @@ pipeline:
       COUCHDB_PORT_5984_TCP_ADDR: localhost
       COUCHDB_PORT_5984_TCP_PORT: "5984"
       DBNAME: onezero-accounts
-#
-#  cache:
-#    mount:
-#      - .git
 
-#  publish:
-#    docker:
-#      storage_driver: overlay
-#      username: onezerobinary
-#      password: $$DOCKER_HUB_PASSWORD
-#      email: ezanardo@onezerobinary.com
-#      repo: onezerobinary/db-box
-#      tag: latest
-#      when:
-#        branch: master
-#
+  cache:
+    mount:
+      - .git
+
+  publish:
+    docker:
+      storage_driver: overlay
+      username: onezerobinary
+      password: $$DOCKER_HUB_PASSWORD
+      email: ezanardo@onezerobinary.com
+      repo: onezerobinary/db-box
+      tag: latest
+      when:
+        branch: master
+
 #  deploy:
 #    rancher:
 #      url: http://139.162.131.149:8080/v1

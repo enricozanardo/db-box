@@ -1,39 +1,30 @@
 ---
 pipeline:
+
+##  compose:
+  database:
+    image: couchdb:latest
+    environment:
+      COUCHDB_USER: enrico
+      COUCHDB_PASSWORD: "123456"
+      COUCHDB_NAME: onezero-accounts
+      COUCHDB_PORT_5984_TCP_ADDR: localhost
+      COUCHDB_PORT_5984_TCP_PORT: "5984"
+      DBNAME: onezero-accounts
+
   build:
     image: iron/go:dev
     pull: true
     commands:
       - export PATH=$GOPATH/bin:$PATH
-      - pwd
-      - ls
-      - cd ..
-      - ls
       - mkdir -p $GOPATH/src/github.com/onezerobinary/
       - mv db-box $GOPATH/src/github.com/onezerobinary/.
       - cd $GOPATH/src/github.com/onezerobinary/db-box
-      - pwd
-      - ls
-#      - go env
-#      - go get --tags nopkcs11
-  #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install
-      - ls
       - go build --tags nopkcs11
       - go test -v ./utils
       - go test -v ./job --tags nopkcs11
-
-##  compose:
-#  database:
-#    image: couchdb:latest
-#    environment:
-#      COUCHDB_USER: enrico
-#      COUCHDB_PASSWORD: "123456"
-#      COUCHDB_NAME: onezero-accounts
-#      COUCHDB_PORT_5984_TCP_ADDR: localhost
-#      COUCHDB_PORT_5984_TCP_PORT: "5984"
-#      DBNAME: onezero-accounts
 
 #  cache:
 #    mount:

@@ -1,57 +1,59 @@
 ---
-build:
-  image: iron/go:dev
-  commands:
-    - go get --tags nopkcs11
-#    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
-    - go get -u github.com/Masterminds/glide
-    - glide install
-    - go build --tags nopkcs11
-    - go test -v ./utils
-    - go test -v ./job --tags nopkcs11
+pipeline:
 
-compose:
-  database:
-    image: couchdb:latest
-    environment:
-      COUCHDB_USER: enrico
-      COUCHDB_PASSWORD: 123456
-      COUCHDB_NAME: onezero-accounts
-      COUCHDB_PORT_5984_TCP_ADDR: localhost
-      COUCHDB_PORT_5984_TCP_PORT: 5984
-      DBNAME: onezero-accounts
+  build:
+    image: iron/go:dev
+    commands:
+      - go get --tags nopkcs11
+  #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
+      - go get -u github.com/Masterminds/glide
+      - glide install
+      - go build --tags nopkcs11
+      - go test -v ./utils
+      - go test -v ./job --tags nopkcs11
 
-cache:
-  mount:
-    - .git
+  compose:
+    database:
+      image: couchdb:latest
+      environment:
+        COUCHDB_USER: enrico
+        COUCHDB_PASSWORD: 123456
+        COUCHDB_NAME: onezero-accounts
+        COUCHDB_PORT_5984_TCP_ADDR: localhost
+        COUCHDB_PORT_5984_TCP_PORT: 5984
+        DBNAME: onezero-accounts
 
-publish:
-  docker:
-    storage_driver: overlay
-    username: onezerobinary
-    password: $$DOCKER_HUB_PASSWORD
-    email: ezanardo@onezerobinary.com
-    repo: onezerobinary/db-box
-    tag: latest
-    when:
-      branch: master
+  cache:
+    mount:
+      - .git
 
-deploy:
-  rancher:
-    url: http://139.162.131.149:8080/v1
-    access_key: $$RANCHER_ACCESS_KEY
-    secret_key: $$RANCHER_SECRET_KEY
-    service: pulserescue/db-box
-    docker_image: onezerobinary/db-box:latest
-    when:
-      branch: master
+  publish:
+    docker:
+      storage_driver: overlay
+      username: onezerobinary
+      password: $$DOCKER_HUB_PASSWORD
+      email: ezanardo@onezerobinary.com
+      repo: onezerobinary/db-box
+      tag: latest
+      when:
+        branch: master
 
-notify:
-  email:
-    host: smtp.webfaction.com
-    skip_verify: true
-    username: 10b_cicd
-    password: $$CICD_EMAIL_PASSWORD
-    from: cicd@onezerobinary.com
-    attachment: build-result.xml
-    recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@gmail.com ]
+  deploy:
+    rancher:
+      url: http://139.162.131.149:8080/v1
+      access_key: $$RANCHER_ACCESS_KEY
+      secret_key: $$RANCHER_SECRET_KEY
+      service: pulserescue/db-box
+      docker_image: onezerobinary/db-box:latest
+      when:
+        branch: master
+
+  notify:
+    email:
+      host: smtp.webfaction.com
+      skip_verify: true
+      username: 10b_cicd
+      password: $$CICD_EMAIL_PASSWORD
+      from: cicd@onezerobinary.com
+      attachment: build-result.xml
+      recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@gmail.com ]

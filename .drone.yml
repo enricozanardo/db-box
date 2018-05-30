@@ -1,7 +1,7 @@
 ---
 pipeline:
   build:
-    image: iron/go
+    image: go:iron
     commands:
       - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11

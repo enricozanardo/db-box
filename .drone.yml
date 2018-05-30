@@ -7,8 +7,8 @@ pipeline:
       - export PATH=$GOPATH/bin:$PATH
       - pwd
       - ls
-      - cd
-      - mv /drone/src/github.com/onezerobinary/db-box $GOPATH/src/github.com/onezerobinary/db-box
+      - cd ..
+      - mv db-box $GOPATH/src/github.com/onezerobinary/db-box
       - cd $GOPATH/src/github.com/onezerobinary/db-box
       - pwd
       - ls

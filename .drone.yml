@@ -4,7 +4,7 @@ pipeline:
     image: iron/go:dev
     pull: true
     commands:
-      - export PATH=$PATH:/go
+      - export PATH=$PATH:$(go env GOPATH)/bin
       - go env
       - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11

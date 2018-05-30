@@ -11,17 +11,16 @@ pipeline:
       - ls
       - mkdir -p $GOPATH/src/github.com/onezerobinary/
       - mv db-box $GOPATH/src/github.com/onezerobinary/.
-#      - cd $GOPATH/src/github.com/onezerobinary/db-box
-#      - pwd
-#      - ls
-#      - export GOBIN=$HOME/go/bin
-      - go env
-#      - cd $GOPATH
+      - cd $GOPATH/src/github.com/onezerobinary/db-box
+      - pwd
+      - ls
+#      - go env
 #      - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
-#      - go get -u github.com/Masterminds/glide
-#      - glide install
-
+      - go get -u github.com/Masterminds/glide
+      - glide install
+      - cd ..
+      - ls
 #      - go build --tags nopkcs11
 #      - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11

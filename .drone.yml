@@ -1,7 +1,5 @@
 ---
-pipeline:
-
-##  compose:
+compose:
   database:
     image: couchdb:latest
     environment:
@@ -12,6 +10,7 @@ pipeline:
       COUCHDB_PORT_5984_TCP_PORT: "5984"
       DBNAME: onezero-accounts
 
+pipeline:
   build:
     image: iron/go:dev
     pull: true
@@ -24,7 +23,7 @@ pipeline:
       - glide install
       - go build --tags nopkcs11
       - go test -v ./utils
-      - go test -v ./job --tags nopkcs11
+#      - go test -v ./job --tags nopkcs11
 
 #  cache:
 #    mount:

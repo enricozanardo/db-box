@@ -42,7 +42,7 @@ pipeline:
 #    mount:
 #      - .git
 
-  publish:
+#  publish:
   docker:
     image: docker
     storage_driver: overlay

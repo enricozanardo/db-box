@@ -10,6 +10,7 @@ compose:
       COUCHDB_PORT_5984_TCP_PORT: "5984"
       DBNAME: onezero-accounts
 
+
 pipeline:
   build:
     image: iron/go:dev

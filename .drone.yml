@@ -4,7 +4,6 @@ pipeline:
     image: iron/go:dev
     pull: true
     commands:
-      - export PATH=$PATH:/go
       - go env
 #      - cd $GOPATH
 #      - go get --tags nopkcs11

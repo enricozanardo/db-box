@@ -12,18 +12,29 @@ compose:
 
 
 pipeline:
+
   build:
     image: iron/go:dev
     pull: true
     commands:
-      - export PATH=$GOPATH/bin:$PATH
-      - mkdir -p $GOPATH/src/github.com/onezerobinary/
-      - mv db-box $GOPATH/src/github.com/onezerobinary/.
-      - cd $GOPATH/src/github.com/onezerobinary/db-box
+      - go get
       - go get -u github.com/Masterminds/glide
       - glide install
-      - go build --tags nopkcs11
+      - go build
       - go test -v ./utils
+
+#  build:
+#    image: iron/go:dev
+#    pull: true
+#    commands:
+#      - export PATH=$GOPATH/bin:$PATH
+#      - mkdir -p $GOPATH/src/github.com/onezerobinary/
+#      - mv db-box $GOPATH/src/github.com/onezerobinary/.
+#      - cd $GOPATH/src/github.com/onezerobinary/db-box
+#      - go get -u github.com/Masterminds/glide
+#      - glide install
+#      - go build --tags nopkcs11
+#      - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11
 
 #  cache:

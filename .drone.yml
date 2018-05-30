@@ -5,6 +5,7 @@ pipeline:
     pull: true
     commands:
       - export PATH=$PATH:/go
+      - go env
       - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
@@ -30,6 +31,7 @@ pipeline:
 
 #  publish:
 #  docker:
+#    image: docker
 #    storage_driver: overlay
 #    username: onezerobinary
 #    password: $$DOCKER_HUB_PASSWORD

@@ -8,17 +8,18 @@ pipeline:
       - pwd
       - ls
       - cd ..
-      - mv db-box $GOPATH/src/github.com/onezerobinary/db-box
-      - cd $GOPATH/src/github.com/onezerobinary/db-box
-      - pwd
       - ls
+#      - mv db-box $GOPATH/src/github.com/onezerobinary/db-box
+#      - cd $GOPATH/src/github.com/onezerobinary/db-box
+#      - pwd
+#      - ls
 #      - export GOBIN=$HOME/go/bin
       - go env
 #      - cd $GOPATH
 #      - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
-      - go get -u github.com/Masterminds/glide
-      - glide install
+#      - go get -u github.com/Masterminds/glide
+#      - glide install
 
 #      - go build --tags nopkcs11
 #      - go test -v ./utils

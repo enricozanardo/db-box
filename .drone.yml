@@ -6,8 +6,8 @@ pipeline:
     commands:
       - export PATH=$PATH:/go
       - go env
-      - cd $GOPATH
-      - go get --tags nopkcs11
+#      - cd $GOPATH
+#      - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install

@@ -11,8 +11,9 @@ pipeline:
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install
-      - go build /go/src/github.com/onezerobinary/db-box --tags nopkcs11
-#      - go build --tags nopkcs11
+      - cd $HOME/go/src
+      - go list ./...
+      - go build --tags nopkcs11
       - go test -v ./utils
       - go test -v ./job --tags nopkcs11
 

@@ -11,16 +11,16 @@ pipeline:
       - go test -v ./utils
       - go test -v ./job --tags nopkcs11
 
-#  compose:
-#    database:
-#      image: couchdb:latest
-#      environment:
-#        COUCHDB_USER: enrico
-#        COUCHDB_PASSWORD: 123456
-#        COUCHDB_NAME: onezero-accounts
-#        COUCHDB_PORT_5984_TCP_ADDR: localhost
-#        COUCHDB_PORT_5984_TCP_PORT: 5984
-#        DBNAME: onezero-accounts
+  compose:
+    database:
+      image: couchdb:latest
+      environment:
+        COUCHDB_USER: enrico
+        COUCHDB_PASSWORD: 123456
+        COUCHDB_NAME: onezero-accounts
+        COUCHDB_PORT_5984_TCP_ADDR: localhost
+        COUCHDB_PORT_5984_TCP_PORT: 5984
+        DBNAME: onezero-accounts
 #
 #  cache:
 #    mount:

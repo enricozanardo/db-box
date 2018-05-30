@@ -7,7 +7,8 @@ pipeline:
       - go get --tags nopkcs11
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
-      - glide install
+      - glide build
+#      - glide install
       - go build --tags nopkcs11
       - go test -v ./utils
       - go test -v ./job --tags nopkcs11
@@ -27,16 +28,17 @@ pipeline:
 #    mount:
 #      - .git
 
-#  publish:
-#    docker:
-#      storage_driver: overlay
-#      username: onezerobinary
-#      password: $$DOCKER_HUB_PASSWORD
-#      email: ezanardo@onezerobinary.com
-#      repo: onezerobinary/db-box
-#      tag: latest
-#      when:
-#        branch: master
+  publish:
+    docker:
+      storage_driver: overlay
+      username: onezerobinary
+      password: $$DOCKER_HUB_PASSWORD
+      secrets: [ docker_hub_password ]
+      email: ezanardo@onezerobinary.com
+      repo: onezerobinary/db-box
+      tag: latest
+      when:
+        branch: master
 
 #  deploy:
 #    rancher:

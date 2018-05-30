@@ -5,6 +5,13 @@ pipeline:
     pull: true
     commands:
       - export PATH=$GOPATH/bin:$PATH
+      - pwd
+      - ls
+      - cd
+      - mv /drone/src/github.com/onezerobinary/db-box $GOPATH/src/github.com/onezerobinary/db-box
+      - cd $GOPATH/src/github.com/onezerobinary/db-box
+      - pwd
+      - ls
 #      - export GOBIN=$HOME/go/bin
       - go env
 #      - cd $GOPATH
@@ -12,9 +19,7 @@ pipeline:
   #    - go get -t -v github.com/hyperledger/fabric/vendor/github.com/miekg/pkcs11
       - go get -u github.com/Masterminds/glide
       - glide install
-      - cd $GOPATH/src/github.com
-      - pwd
-      - ls
+
 #      - go build --tags nopkcs11
 #      - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11

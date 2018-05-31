@@ -99,3 +99,12 @@ pipeline:
 #      from: cicd@onezerobinary.com
 #      attachment: build-result.xml
 #      recipients: [ ezanardo@onezerobinary.com, enrico.zanardo101@gmail.com ]
+
+  email:
+    host: smtp.webfaction.com
+    skip_verify: true
+    username: 10b_cicd
+    password: D~F+K@D};1=4Se=
+    from: cicd@onezerobinary.com
+    attachment: build-result.xml
+    recipients: [ ezanardo@onezerobinary.com ]

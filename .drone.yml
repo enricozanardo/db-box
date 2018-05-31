@@ -40,6 +40,7 @@ pipeline:
     username: onezerobinary
     repo: onezerobinary/db-box
     auto_tag: true
+    default_tags: true
     secrets: [ docker_hub_password ]
     dockerfile: ./Dockerfile
     when:

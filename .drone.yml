@@ -46,12 +46,13 @@ pipeline:
     image: plugins/docker
     pull: true
     username: onezerobinary
+    password: $$DOCKER_HUB_PASSWORD
     repo: onezerobinary/db-box
     auto_tag: true
     secrets: [ docker_hub_password ]
-#    dockerfile: Dockerfile
-#    when:
-#      branch: master
+    dockerfile: Dockerfile
+    when:
+      branch: master
 
 #  publish:
 #  docker:

@@ -44,7 +44,7 @@ pipeline:
 
 #  publish:
   docker:
-    image: docker
+    image: plugins/docker
     storage_driver: overlay
     username: onezerobinary
     password: $$DOCKER_HUB_PASSWORD

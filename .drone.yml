@@ -48,10 +48,10 @@ pipeline:
       repo: onezerobinary/db-box
       auto_tag: true
       secrets: [ docker_hub_password ]
-      dockerfile: Dockerfile
-      when:
-        branch: master
-        event: push
+#      dockerfile: Dockerfile
+#      when:
+#        branch: master
+#        event: push
 
 
 ##  publish:

@@ -38,14 +38,12 @@ pipeline:
   publish_docker:
     image: plugins/docker:17.05
     pull: true
-    environment:
-      DOCKER_LAUNCH_DEBUG: true
     username: onezerobinary
     repo: onezerobinary/db-box
     auto_tag: true
     secrets: [ docker_hub_password ]
     dockerfile: Dockerfile
-    dry_run: "true"
+    dry_run: true
     when:
       event: push
       branch: master

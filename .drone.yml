@@ -42,7 +42,7 @@ pipeline:
     auto_tag: true
     default_tags: true
     secrets: [ docker_hub_password ]
-    dockerfile: ./Dockerfile
+    dockerfile: Dockerfile
     when:
       branch: master
 

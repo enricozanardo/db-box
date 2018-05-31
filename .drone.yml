@@ -14,18 +14,7 @@ workspace:
   base: /go
   path: src/github.com/onezerobinary/db-box
 
-
 pipeline:
-
-#  build:
-#    image: iron/go:dev
-#    pull: true
-#    commands:
-#      - go get
-#      - go get -u github.com/Masterminds/glide
-#      - glide install
-#      - go build
-#      - go test -v ./utils
 
   build:
     image: iron/go:dev
@@ -47,7 +36,7 @@ pipeline:
 #      - .git
 
   publish_docker:
-    image: plugins/docker
+    image: plugins/docker:17.05
     pull: true
     username: onezerobinary
     password: $$DOCKER_HUB_PASSWORD

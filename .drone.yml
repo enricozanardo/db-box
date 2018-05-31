@@ -49,7 +49,7 @@ pipeline:
     username: onezerobinary
     password: $$DOCKER_HUB_PASSWORD
     secrets: [ docker_hub_password ]
-    email: ezanardo@onezerobinary.com
+#    email: ezanardo@onezerobinary.com
     repo: onezerobinary/db-box
     tag: latest
     when:

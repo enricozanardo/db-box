@@ -44,7 +44,7 @@ pipeline:
 
   publish_docker:
     image: plugins/docker
-    pull: true
+    storage_driver: overlay
     username: onezerobinary
     repo: onezerobinary/db-box
     auto_tag: true

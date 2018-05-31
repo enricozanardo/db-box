@@ -51,6 +51,7 @@ pipeline:
       dockerfile: Dockerfile
       when:
         branch: master
+        event: push
 
 
 ##  publish:

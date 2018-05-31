@@ -27,7 +27,8 @@ pipeline:
 #      - cd $GOPATH/src/github.com/onezerobinary/db-box
       - go get -u github.com/Masterminds/glide
       - glide install
-      - go build --tags nopkcs11
+#      - go build --tags nopkcs11
+      - go build
       - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11
 
@@ -42,10 +43,9 @@ pipeline:
     repo: onezerobinary/db-box
     auto_tag: true
     secrets: [ docker_hub_password ]
-    dockerfile: Dockerfile
+    dockerfile: ./Dockerfile
     dry_run: true
     when:
-      event: push
       branch: master
 
 #  publish:

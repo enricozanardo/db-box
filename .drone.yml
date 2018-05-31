@@ -38,7 +38,8 @@ pipeline:
   docker:
     image: plugins/docker
     username: onezerobinary
-    password: Ch120772Za
+    password: ${DOCKER_HUB_PASSWORD}
+#    password: Ch120772Za
     repo: onezerobinary/db-box
     tags: latest
 

@@ -45,6 +45,7 @@ pipeline:
     secrets: [ docker_hub_password ]
     dockerfile: Dockerfile
     when:
+      event: push
       branch: master
 
 #  publish:

@@ -43,15 +43,15 @@ pipeline:
 #      - .git
 
   publish_docker:
-      image: plugins/docker
-      username: onezerobinary
-      repo: onezerobinary/db-box
-      auto_tag: true
-      secrets: [ docker_hub_password ]
-      dockerfile: Dockerfile
-      when:
-        branch: master
-        event: pull
+    image: plugins/docker
+    pull: true
+    username: onezerobinary
+    repo: onezerobinary/db-box
+    auto_tag: true
+    secrets: [ docker_hub_password ]
+    dockerfile: Dockerfile
+    when:
+      branch: master
 
 #  publish:
 #  docker:

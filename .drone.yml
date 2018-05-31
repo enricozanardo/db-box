@@ -45,16 +45,16 @@ pipeline:
     when:
       branch: master
 
-  rancher:
-    image: peloton/drone-rancher
-    url: http://139.162.131.149:8080/v1
-    access_key: $$RANCHER_ACCESS_KEY
-    secret_key: $$RANCHER_SECRET_KEY
-    secrets: [ rancher_access_key, rancher_secret_key ]
-    service: pulserescue/db-box
-    docker_image: onezerobinary/db-box:latest
-    when:
-      branch: master
+#  rancher:
+#    image: peloton/drone-rancher
+#    url: http://139.162.131.149:8080/v1
+#    access_key: $$RANCHER_ACCESS_KEY
+#    secret_key: $$RANCHER_SECRET_KEY
+#    secrets: [ rancher_access_key, rancher_secret_key ]
+#    service: pulserescue/db-box
+#    docker_image: onezerobinary/db-box:latest
+#    when:
+#      branch: master
 
 
 #  publish:

@@ -36,7 +36,7 @@ pipeline:
 #      - .git
 
   publish_docker:
-    image: plugins/docker:17.05
+    image: plugins/docker
     username: onezerobinary
     repo: onezerobinary/db-box
     auto_tag: true

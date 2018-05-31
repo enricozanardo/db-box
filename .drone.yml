@@ -10,6 +10,10 @@ compose:
       COUCHDB_PORT_5984_TCP_PORT: "5984"
       DBNAME: onezero-accounts
 
+workspace:
+  base: /go
+  path: src/github.com/onezerobinary/db-box
+
 
 pipeline:
 
@@ -27,11 +31,11 @@ pipeline:
     image: iron/go:dev
     pull: true
     commands:
-      - export PATH=$GOPATH/bin:$PATH
-      - mkdir -p $GOPATH/src/github.com/onezerobinary/
-      - cd ..
-      - mv db-box $GOPATH/src/github.com/onezerobinary/.
-      - cd $GOPATH/src/github.com/onezerobinary/db-box
+#      - export PATH=$GOPATH/bin:$PATH
+#      - mkdir -p $GOPATH/src/github.com/onezerobinary/
+#      - cd ..
+#      - mv db-box $GOPATH/src/github.com/onezerobinary/.
+#      - cd $GOPATH/src/github.com/onezerobinary/db-box
       - go get -u github.com/Masterminds/glide
       - glide install
       - go build --tags nopkcs11

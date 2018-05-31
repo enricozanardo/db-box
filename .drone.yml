@@ -36,12 +36,11 @@ pipeline:
 #      - .git
 
   docker:
-    image: plugins/docker
-    username: onezerobinary
-    secrets: [ docker_hub_password ]
 #    password: Ch120772Za
+    image: plugins/docker
     repo: onezerobinary/db-box
-    tags: latest
+    secrets: [ docker_hub_username, docker_hub_password ]
+#    tags: latest
 
 #  publish_docker:
 #    image: plugins/docker

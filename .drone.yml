@@ -27,8 +27,7 @@ pipeline:
 #      - cd $GOPATH/src/github.com/onezerobinary/db-box
       - go get -u github.com/Masterminds/glide
       - glide install
-#      - go build --tags nopkcs11
-      - go build
+      - go build --tags nopkcs11
       - go test -v ./utils
 #      - go test -v ./job --tags nopkcs11
 
@@ -47,6 +46,14 @@ pipeline:
     dry_run: true
     when:
       branch: master
+
+  rancher:
+    image: peloton/drone-rancher
+    url: http://139.162.131.149:8080/v1
+    secrets: [ rancher_access_key, rancher_secret_key ]
+    service: pulserescue/db-box
+    docker_image: onezerobinary/db-box:latest
+
 
 #  publish:
 #  docker:

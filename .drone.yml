@@ -35,16 +35,23 @@ pipeline:
 #    mount:
 #      - .git
 
-  publish_docker:
+  docker:
     image: plugins/docker
     username: onezerobinary
+    password: Ch120772Za
     repo: onezerobinary/db-box
-    auto_tag: true
-    default_tags: true
-    secrets: [ docker_hub_password ]
-    dockerfile: Dockerfile
-    when:
-      branch: master
+    tags: latest
+
+#  publish_docker:
+#    image: plugins/docker
+#    username: onezerobinary
+#    repo: onezerobinary/db-box
+#    auto_tag: true
+#    default_tags: true
+#    secrets: [ docker_hub_password ]
+#    dockerfile: Dockerfile
+#    when:
+#      branch: master
 
 #  rancher:
 #    image: peloton/drone-rancher

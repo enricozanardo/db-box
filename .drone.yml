@@ -44,14 +44,14 @@ pipeline:
 
   publish_docker:
     image: plugins/docker
-    storage_driver: overlay
+    pull: true
     username: onezerobinary
     repo: onezerobinary/db-box
     auto_tag: true
     secrets: [ docker_hub_password ]
-    dockerfile: Dockerfile
-    when:
-      branch: master
+#    dockerfile: Dockerfile
+#    when:
+#      branch: master
 
 #  publish:
 #  docker:

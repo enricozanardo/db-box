@@ -55,6 +55,7 @@ message Account {
     string created = 7;
     string expiration = 8;
     repeated string expopushtoken = 9;
+    string role = 10;
 }
 
 message Credentials {

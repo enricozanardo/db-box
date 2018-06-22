@@ -44,7 +44,7 @@ func TestAddDoc(t *testing.T) {
 	//fakeToken := pb_account.Token{"fff"}
 	fakeStatus := pb_account.Status{pb_account.Status_DISABLED}
 
-	username := "enrico@enrico.com"
+	username := "enrico1@enrico.com"
 	password := "enrico"
 
 	faketoken := GenerateToken(username, password)
@@ -59,6 +59,7 @@ func TestAddDoc(t *testing.T) {
 		"2018-01-11",
 		"2028-01-10",
 		nil,
+		"manager",
 	}
 
 	token, err :=  AddDoc(fakeAccount)
@@ -186,6 +187,7 @@ func TestUpdateDoc(t *testing.T) {
 		"2018-01-11",
 		"2028-01-10",
 		nil,
+		"manager",
 	}
 
 	token, err :=  AddDoc(fakeAccount)
